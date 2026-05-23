@@ -12,6 +12,7 @@ describe("ContactForm", () => {
           name: "Budi",
           phone: "0812",
           email: "[email protected]",
+          image: "https://example.com/avatar.png",
           notes: "Friend",
         }}
         onSubmit={onSubmit}
@@ -21,6 +22,10 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText("Name")).toHaveValue("Budi");
     expect(screen.getByLabelText("Phone")).toHaveValue("0812");
     expect(screen.getByLabelText("Email")).toHaveValue("[email protected]");
+    expect(screen.getByAltText("Photo preview")).toHaveAttribute(
+      "src",
+      "https://example.com/avatar.png",
+    );
     expect(screen.getByLabelText("Notes")).toHaveValue("Friend");
 
     rerender(
@@ -29,6 +34,7 @@ describe("ContactForm", () => {
           name: "Siti",
           phone: "0813",
           email: "",
+          image: "",
           notes: "Colleague",
         }}
         onSubmit={onSubmit}
@@ -39,6 +45,7 @@ describe("ContactForm", () => {
       expect(screen.getByLabelText("Name")).toHaveValue("Siti");
       expect(screen.getByLabelText("Phone")).toHaveValue("0813");
       expect(screen.getByLabelText("Email")).toHaveValue("");
+      expect(screen.queryByAltText("Photo preview")).not.toBeInTheDocument();
       expect(screen.getByLabelText("Notes")).toHaveValue("Colleague");
     });
   });
@@ -63,15 +70,31 @@ describe("ContactForm", () => {
     expect(await screen.findByText("Invalid email")).toBeInTheDocument();
 
     await user.clear(screen.getByLabelText("Email"));
+    const photoInput = screen.getByLabelText("Photo") as HTMLInputElement;
+    await user.upload(
+      photoInput,
+      new File(["avatar-bytes"], "avatar.png", { type: "image/png" }),
+    );
+
+    await waitFor(() => {
+      expect(screen.getByAltText("Photo preview")).toHaveAttribute(
+        "src",
+        expect.stringContaining("data:image/png;base64,"),
+      );
+    });
+
     await user.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() => {
-      expect(onSubmit.mock.calls[0][0]).toEqual({
+      expect(onSubmit.mock.calls[0][0]).toMatchObject({
         name: "Budi",
         phone: "0812",
         email: "",
         notes: "",
       });
+      expect(onSubmit.mock.calls[0][0].image).toEqual(
+        expect.stringContaining("data:image/png;base64,"),
+      );
     });
   });
 

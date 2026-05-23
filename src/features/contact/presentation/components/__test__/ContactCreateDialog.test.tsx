@@ -89,6 +89,7 @@ describe("ContactCreateDialog", () => {
       name: "Budi",
       phone: "0812",
       email: "",
+      image: "",
       notes: "",
     });
     expect(store.getState().contactCreateModal.isOpen).toBe(false);

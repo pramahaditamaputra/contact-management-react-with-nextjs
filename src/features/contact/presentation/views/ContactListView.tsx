@@ -5,11 +5,17 @@ import { Button } from "@/src/shared/components/ui/button";
 import { useAppDispatch } from "@/src/store/hooks";
 import { openContactCreateModal } from "../state/contact-create-modal.slice";
 import { DataTable } from "@/src/shared/components/data-table/data-table";
-import { columns } from "../components/data-table/columns-contact";
+import { createContactColumns } from "../components/data-table/columns-contact";
+import { ContactCreateDialog } from "../components/ContactCreateDialog";
+import { ContactEditSheet } from "../components/ContactEditSheet";
+import { openContactEditModal } from "../state/contact-edit-modal.slice";
 
 export const ContactListView = () => {
   const { contacts } = useContactListViewModel();
   const dispatch = useAppDispatch();
+  const columns = createContactColumns({
+    onEdit: (contact) => dispatch(openContactEditModal(contact)),
+  });
 
   if (contacts.loading) return <div>Loading...</div>;
   if (contacts.error) return <div>Failed to load</div>;
@@ -36,6 +42,8 @@ export const ContactListView = () => {
           </div>
         </div>
       </div>
+      <ContactCreateDialog />
+      <ContactEditSheet />
     </div>
   );
 };

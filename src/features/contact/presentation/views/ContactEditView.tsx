@@ -20,6 +20,7 @@ export const ContactEditView = ({ id }: Props) => {
           name: contact.name,
           phone: contact.phone,
           email: contact.email,
+          image: contact.image,
           notes: contact.notes,
         }}
         onSubmit={onSubmit}

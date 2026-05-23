@@ -13,7 +13,13 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { MoreVerticalCircle01Icon } from "@hugeicons/core-free-icons";
 import { DataTableColumnHeader } from "@/src/shared/components/data-table/data-table-column-header";
 
-export const columns: ColumnDef<Contact, unknown>[] = [
+type ContactColumnsOptions = {
+  onEdit: (contact: Contact) => void;
+};
+
+export const createContactColumns = ({
+  onEdit,
+}: ContactColumnsOptions): ColumnDef<Contact, unknown>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -33,7 +39,7 @@ export const columns: ColumnDef<Contact, unknown>[] = [
         </div>
       );
     },
-    size: 0,
+    size: 250,
     enableHiding: true,
   },
   {
@@ -42,7 +48,7 @@ export const columns: ColumnDef<Contact, unknown>[] = [
     cell: ({ row }) => {
       return <p>{row.original.phone}</p>;
     },
-    size: 0,
+    size: 250,
     enableHiding: true,
   },
   {
@@ -51,13 +57,13 @@ export const columns: ColumnDef<Contact, unknown>[] = [
     cell: ({ row }) => {
       return <p>{row.original.email}</p>;
     },
-    size: 0,
+    size: 250,
     enableHiding: true,
   },
   {
     id: "actions",
-    size: 0,
-    cell: () => {
+    size: 50,
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -71,7 +77,9 @@ export const columns: ColumnDef<Contact, unknown>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => onEdit(row.original)}>
+              Edit
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>

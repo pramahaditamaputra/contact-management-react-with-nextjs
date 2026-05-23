@@ -31,15 +31,20 @@ describe("ContactRepositoryImpl", () => {
     const repo = new ContactRepositoryImpl();
     const result = await repo.getContacts();
 
-    expect(result).toEqual([
-      {
-        id: "1",
-        name: "Budi Santoso",
-        phone: "0812",
-        email: "N/A",
-        image: "https://via.placeholder.com/150",
-      },
-    ]);
+    expect(result).toEqual({
+      items: [
+        {
+          id: "1",
+          name: "Budi Santoso",
+          phone: "0812",
+          email: "N/A",
+          image: "https://via.placeholder.com/150",
+        },
+      ],
+      total: 1,
+      skip: 0,
+      limit: 10,
+    });
   });
 
   it("forwards keyword to api on getContacts", async () => {
@@ -55,16 +60,21 @@ describe("ContactRepositoryImpl", () => {
     const repo = new ContactRepositoryImpl();
     const result = await repo.getContacts("siti");
 
-    expect(contactApi.getContacts).toHaveBeenCalledWith("siti");
-    expect(result).toEqual([
-      {
-        id: "2",
-        name: "Siti Aminah",
-        phone: "0813",
-        email: "N/A",
-        image: "https://via.placeholder.com/150",
-      },
-    ]);
+    expect(contactApi.getContacts).toHaveBeenCalledWith("siti", 0, 5);
+    expect(result).toEqual({
+      items: [
+        {
+          id: "2",
+          name: "Siti Aminah",
+          phone: "0813",
+          email: "N/A",
+          image: "https://via.placeholder.com/150",
+        },
+      ],
+      total: 1,
+      skip: 0,
+      limit: 10,
+    });
   });
 
   it("returns contact entity or null on getContact", async () => {

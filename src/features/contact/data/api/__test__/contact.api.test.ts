@@ -29,7 +29,7 @@ describe("contactApi", () => {
     await contactApi.getContacts("budi");
 
     expect(apiClient.get).toHaveBeenCalledWith("/users/search", {
-      params: { q: "budi" },
+      params: { q: "budi", limit: 5, skip: 0 },
     });
   });
 
@@ -45,7 +45,9 @@ describe("contactApi", () => {
 
     await contactApi.getContacts();
 
-    expect(apiClient.get).toHaveBeenCalledWith("/users");
+    expect(apiClient.get).toHaveBeenCalledWith("/users", {
+      params: { limit: 5, skip: 0 },
+    });
   });
 
   it("fetches a contact by id", async () => {

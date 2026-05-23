@@ -8,8 +8,14 @@ import contactFilterSlice from "../../state/contact-filter.slice";
 
 vi.mock("../../queries/useContactsQuery", () => ({
   useContactsQuery: vi.fn(() => ({
-    data: [{ id: "1", name: "Budi", phone: "0812" }],
+    data: {
+      items: [{ id: "1", name: "Budi", phone: "0812" }],
+      total: 1,
+      skip: 0,
+      limit: 5,
+    },
     isLoading: false,
+    isFetching: false,
     error: null,
     refetch: vi.fn(),
   })),
@@ -51,12 +57,15 @@ describe("useContactListViewModel", () => {
     expect(result.current.contacts.items).toEqual([
       { id: "1", name: "Budi", phone: "0812" },
     ]);
+    expect(result.current.contacts.totalCount).toBe(1);
+    expect(result.current.pagination.pageCount).toBe(1);
   });
 
   it("falls back to empty contacts when data is missing", () => {
     vi.mocked(useContactsQuery).mockReturnValueOnce({
       data: undefined,
       isLoading: true,
+      isFetching: true,
       error: new Error("missing"),
       refetch: vi.fn(),
     } as never);

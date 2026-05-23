@@ -4,6 +4,7 @@ import {
   CreateContactPayload,
   UpdateContactPayload,
 } from "../../domain/repositories/contact.repository";
+import { ContactListResult } from "../../domain/repositories/contact.repository";
 import { contactApi } from "../api/contact.api";
 import {
   contactDtoToEntity,
@@ -11,9 +12,18 @@ import {
 } from "../mappers/contact.mapper";
 
 export class ContactRepositoryImpl implements ContactRepository {
-  async getContacts(keyword?: string): Promise<Contact[]> {
-    const data = await contactApi.getContacts(keyword);
-    return contactsDtoToEntity(data);
+  async getContacts(
+    keyword?: string,
+    pageIndex = 0,
+    pageSize = 5,
+  ): Promise<ContactListResult> {
+    const data = await contactApi.getContacts(keyword, pageIndex, pageSize);
+    return {
+      items: contactsDtoToEntity(data),
+      total: data.total,
+      skip: data.skip,
+      limit: data.limit,
+    };
   }
 
   async getContact(id: string): Promise<Contact | null> {

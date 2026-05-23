@@ -11,7 +11,7 @@ import { ContactEditSheet } from "../components/ContactEditSheet";
 import { openContactEditModal } from "../state/contact-edit-modal.slice";
 
 export const ContactListView = () => {
-  const { contacts, filter } = useContactListViewModel();
+  const { contacts, filter, pagination } = useContactListViewModel();
   const dispatch = useAppDispatch();
   const columns = createContactColumns({
     onEdit: (contact) => dispatch(openContactEditModal(contact)),
@@ -30,6 +30,7 @@ export const ContactListView = () => {
               searchValue={filter.keyword}
               onSearchChange={filter.onKeywordChange}
               loading={contacts.loading}
+              pagination={pagination}
               toolbarRight={
                 <Button
                   variant="outline"

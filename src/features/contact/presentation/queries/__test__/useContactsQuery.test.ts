@@ -8,7 +8,12 @@ vi.mock("../../data/repositories/contact.repository.impl", () => ({
     return {
       getContacts: vi
         .fn()
-        .mockResolvedValue([{ id: "1", name: "Budi", phone: "0812" }]),
+        .mockResolvedValue({
+          items: [{ id: "1", name: "Budi", phone: "0812" }],
+          total: 1,
+          skip: 0,
+          limit: 5,
+        }),
     };
   }),
 }));
@@ -30,12 +35,17 @@ describe("useContactsQuery", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual([
-      expect.objectContaining({
-        id: "1",
-        name: "Budi",
-        phone: "0812",
-      }),
-    ]);
+    expect(result.current.data).toEqual({
+      items: [
+        expect.objectContaining({
+          id: "1",
+          name: "Budi",
+          phone: "0812",
+        }),
+      ],
+      total: 1,
+      skip: 0,
+      limit: 5,
+    });
   });
 });

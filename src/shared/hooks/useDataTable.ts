@@ -6,6 +6,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   RowData,
   RowSelectionState,
   SortingState,
@@ -17,11 +18,17 @@ import {
 type UseDataTableProps<TData extends RowData> = {
   data: TData[];
   columns: ColumnDef<TData, unknown>[];
+  pagination?: {
+    state: PaginationState;
+    pageCount: number;
+    onPaginationChange: React.Dispatch<React.SetStateAction<PaginationState>>;
+  };
 };
 
 export default function useDataTable<TData extends RowData>({
   data,
   columns,
+  pagination,
 }: UseDataTableProps<TData>): {
   table: Table<TData>;
 } {
@@ -32,6 +39,14 @@ export default function useDataTable<TData extends RowData>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [internalPagination, setInternalPagination] =
+    React.useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 10,
+    });
+  const isManualPagination = Boolean(pagination);
+  const paginationState = pagination?.state ?? internalPagination;
+  const onPaginationChange = pagination?.onPaginationChange ?? setInternalPagination;
 
   // TanStack Table returns helper functions that the React Compiler cannot safely memoize.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -43,14 +58,18 @@ export default function useDataTable<TData extends RowData>({
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: paginationState,
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange,
+    manualPagination: isManualPagination,
+    pageCount: pagination?.pageCount,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: isManualPagination ? undefined : getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 

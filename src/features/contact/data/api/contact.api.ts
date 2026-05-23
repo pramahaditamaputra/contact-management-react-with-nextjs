@@ -28,21 +28,31 @@ export type UpsertContactPayloadDto = {
 };
 
 export const contactApi = {
-  async getContacts(keyword?: string) {
+  async getContacts(
+    keyword?: string,
+    pageIndex = 0,
+    pageSize = 5,
+  ) {
     const normalizedKeyword = keyword?.trim();
+    const params = {
+      limit: pageSize,
+      skip: pageIndex * pageSize,
+    };
 
     if (normalizedKeyword) {
       const res = await apiClient.get<ContactResponseDto>(
         endpoints.contactSearch,
         {
-          params: { q: normalizedKeyword },
+          params: { ...params, q: normalizedKeyword },
         },
       );
 
       return res.data;
     }
 
-    const res = await apiClient.get<ContactResponseDto>(endpoints.contacts);
+    const res = await apiClient.get<ContactResponseDto>(endpoints.contacts, {
+      params,
+    });
     return res.data;
   },
 

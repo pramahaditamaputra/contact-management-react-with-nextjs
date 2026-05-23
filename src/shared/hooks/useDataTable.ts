@@ -46,7 +46,8 @@ export default function useDataTable<TData extends RowData>({
     });
   const isManualPagination = Boolean(pagination);
   const paginationState = pagination?.state ?? internalPagination;
-  const onPaginationChange = pagination?.onPaginationChange ?? setInternalPagination;
+  const onPaginationChange =
+    pagination?.onPaginationChange ?? setInternalPagination;
 
   // TanStack Table returns helper functions that the React Compiler cannot safely memoize.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -69,7 +70,9 @@ export default function useDataTable<TData extends RowData>({
     pageCount: pagination?.pageCount,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: isManualPagination ? undefined : getPaginationRowModel(),
+    getPaginationRowModel: isManualPagination
+      ? undefined
+      : getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 

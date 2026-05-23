@@ -6,14 +6,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 vi.mock("../../data/repositories/contact.repository.impl", () => ({
   ContactRepositoryImpl: vi.fn().mockImplementation(function () {
     return {
-      getContacts: vi
-        .fn()
-        .mockResolvedValue({
-          items: [{ id: "1", name: "Budi", phone: "0812" }],
-          total: 1,
-          skip: 0,
-          limit: 5,
-        }),
+      getContacts: vi.fn().mockResolvedValue({
+        items: [{ id: "1", name: "Budi", phone: "0812" }],
+        total: 1,
+        skip: 0,
+        limit: 5,
+      }),
     };
   }),
 }));

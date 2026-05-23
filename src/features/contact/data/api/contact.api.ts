@@ -28,11 +28,7 @@ export type UpsertContactPayloadDto = {
 };
 
 export const contactApi = {
-  async getContacts(
-    keyword?: string,
-    pageIndex = 0,
-    pageSize = 5,
-  ) {
+  async getContacts(keyword?: string, pageIndex = 0, pageSize = 5) {
     const normalizedKeyword = keyword?.trim();
     const params = {
       limit: pageSize,

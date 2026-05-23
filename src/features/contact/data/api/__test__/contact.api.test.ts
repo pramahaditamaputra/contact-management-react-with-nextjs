@@ -66,15 +66,18 @@ describe("contactApi", () => {
     } as never);
 
     await contactApi.createContact({
-      name: "Budi",
+      name: "Budi Santoso",
       phone: "0812",
       email: "[email protected]",
     });
 
-    expect(apiClient.post).toHaveBeenCalledWith("/users", {
-      name: "Budi",
+    expect(apiClient.post).toHaveBeenCalledWith("/users/add", {
+      firstName: "Budi",
+      lastName: "Santoso",
       phone: "0812",
       email: "[email protected]",
+      image: undefined,
+      notes: undefined,
     });
   });
 

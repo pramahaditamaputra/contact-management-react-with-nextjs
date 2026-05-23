@@ -27,6 +27,17 @@ export type UpsertContactPayloadDto = {
   notes?: string;
 };
 
+const splitFullName = (name: string) => {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const firstName = parts.shift() ?? "";
+  const lastName = parts.join(" ");
+
+  return {
+    firstName,
+    lastName,
+  };
+};
+
 export const contactApi = {
   async getContacts(keyword?: string, pageIndex = 0, pageSize = 5) {
     const normalizedKeyword = keyword?.trim();
@@ -58,10 +69,16 @@ export const contactApi = {
   },
 
   async createContact(payload: UpsertContactPayloadDto) {
-    const res = await apiClient.post<UserResponseDto>(
-      endpoints.contacts,
-      payload,
-    );
+    const { firstName, lastName } = splitFullName(payload.name);
+
+    const res = await apiClient.post<UserResponseDto>(endpoints.contactAdd, {
+      firstName,
+      lastName,
+      phone: payload.phone,
+      email: payload.email,
+      image: payload.image,
+      notes: payload.notes,
+    });
     return res.data;
   },
 

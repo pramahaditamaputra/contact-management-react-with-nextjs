@@ -10,7 +10,7 @@ vi.mock("../../data/repositories/contact.repository.impl", () => ({
         items: [{ id: "1", name: "Budi", phone: "0812" }],
         total: 1,
         skip: 0,
-        limit: 5,
+        limit: 1,
       }),
     };
   }),
@@ -43,7 +43,7 @@ describe("useContactsQuery", () => {
       ],
       total: 1,
       skip: 0,
-      limit: 5,
+      limit: 1,
     });
   });
 });

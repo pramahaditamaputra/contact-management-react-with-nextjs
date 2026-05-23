@@ -33,6 +33,8 @@ export default function useDataTable<TData extends RowData>({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
+  // TanStack Table returns helper functions that the React Compiler cannot safely memoize.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,

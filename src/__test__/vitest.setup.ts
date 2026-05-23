@@ -62,38 +62,48 @@ const defaultResponse = {
   limit: 1,
 };
 
+type MockPayload = {
+  name?: string;
+  phone?: string;
+  email?: string;
+};
+
 const mockApiClient = {
   get: vi.fn().mockImplementation(async () => ({ data: defaultResponse })),
-  post: vi.fn().mockImplementation(async (_url: string, payload: any) => ({
-    data: {
-      users: [
-        {
-          id: "1",
-          name: payload?.name ?? defaultResponse.users[0].name,
-          phone: payload?.phone ?? defaultResponse.users[0].phone,
-          email: payload?.email ?? defaultResponse.users[0].email,
-        },
-      ],
-      total: 1,
-      skip: 0,
-      limit: 1,
-    },
-  })),
-  put: vi.fn().mockImplementation(async (_url: string, payload: any) => ({
-    data: {
-      users: [
-        {
-          id: "1",
-          name: payload?.name ?? defaultResponse.users[0].name,
-          phone: payload?.phone ?? defaultResponse.users[0].phone,
-          email: payload?.email ?? defaultResponse.users[0].email,
-        },
-      ],
-      total: 1,
-      skip: 0,
-      limit: 1,
-    },
-  })),
+  post: vi
+    .fn()
+    .mockImplementation(async (_url: string, payload: MockPayload) => ({
+      data: {
+        users: [
+          {
+            id: "1",
+            name: payload?.name ?? defaultResponse.users[0].name,
+            phone: payload?.phone ?? defaultResponse.users[0].phone,
+            email: payload?.email ?? defaultResponse.users[0].email,
+          },
+        ],
+        total: 1,
+        skip: 0,
+        limit: 1,
+      },
+    })),
+  put: vi
+    .fn()
+    .mockImplementation(async (_url: string, payload: MockPayload) => ({
+      data: {
+        users: [
+          {
+            id: "1",
+            name: payload?.name ?? defaultResponse.users[0].name,
+            phone: payload?.phone ?? defaultResponse.users[0].phone,
+            email: payload?.email ?? defaultResponse.users[0].email,
+          },
+        ],
+        total: 1,
+        skip: 0,
+        limit: 1,
+      },
+    })),
   delete: vi.fn().mockResolvedValue(undefined),
   defaults: { baseURL: undefined, headers: { common: {} } },
 };

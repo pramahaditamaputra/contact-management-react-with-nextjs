@@ -14,11 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/src/shared/components/ui/sidebar";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  CommandIcon,
-  PhoneCall,
-  PlusSignCircleIcon,
-} from "@hugeicons/core-free-icons";
+import { CommandIcon, PhoneCall } from "@hugeicons/core-free-icons";
 
 const data = {
   user: {

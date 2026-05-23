@@ -1,23 +1,34 @@
 import { Contact } from "../../domain/entities/contact";
-import { ContactResponseDto } from "../api/contact.api";
+import { ContactResponseDto, UserResponseDto } from "../api/contact.api";
 
-export const contactsDtoToEntity = (dto: ContactResponseDto): Contact[] => {
-  return dto.users.map((user) => ({
+const DEFAULT_EMAIL = "N/A";
+const DEFAULT_IMAGE = "https://via.placeholder.com/150";
+
+const mapUserToContact = (user: UserResponseDto): Contact => {
+  const fallbackName = [user.firstName, user.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  const contact: Contact = {
     id: user.id,
-    name: `${user.firstName} ${user.lastName}`,
-    phone: user.phone || "N/A", // Placeholder, as phone is not provided in the API response
-    email: user.email || "N/A", // Placeholder, as email is not provided in the API response
-    image: user.image || "https://via.placeholder.com/150", // Placeholder image URL
-  }));
+    name: user.name ?? fallbackName,
+    phone: user.phone || "N/A",
+    email: user.email || DEFAULT_EMAIL,
+    image: user.image || DEFAULT_IMAGE,
+  };
+
+  if (user.notes) {
+    contact.notes = user.notes;
+  }
+
+  return contact;
 };
 
-export const contactDtoToEntity = (dto: ContactResponseDto): Contact => {
-  const user = dto.users[0]; // Assuming the API returns a single user for getContact
-  return {
-    id: user.id,
-    name: `${user.firstName} ${user.lastName}`,
-    phone: user.phone || "N/A", // Placeholder, as phone is not provided in the API response
-    email: user.email || "N/A", // Placeholder, as email is not provided in the API response
-    image: user.image || "https://via.placeholder.com/150", // Placeholder image URL
-  };
+export const contactsDtoToEntity = (dto: ContactResponseDto): Contact[] => {
+  return dto.users.map((user) => mapUserToContact(user));
+};
+
+export const contactDtoToEntity = (dto: UserResponseDto): Contact => {
+  return mapUserToContact(dto);
 };

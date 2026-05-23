@@ -5,8 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import contactFilterSlice from "../../state/contact-filter.slice";
-import { useContactsQuery } from "../../queries/useContactsQuery";
-import { useContactListViewModel } from "../useContactListViewModel";
 
 vi.mock("../../queries/useContactsQuery", () => ({
   useContactsQuery: vi.fn(() => ({
@@ -16,6 +14,9 @@ vi.mock("../../queries/useContactsQuery", () => ({
     refetch: vi.fn(),
   })),
 }));
+
+import { useContactsQuery } from "../../queries/useContactsQuery";
+import { useContactListViewModel } from "../useContactListViewModel";
 
 const store = configureStore({
   reducer: { contactFilter: contactFilterSlice },

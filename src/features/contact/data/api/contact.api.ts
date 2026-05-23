@@ -10,11 +10,20 @@ export type ContactResponseDto = {
 
 export type UserResponseDto = {
   id: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
+  image?: string;
+  notes?: string;
+};
+
+export type UpsertContactPayloadDto = {
+  name: string;
   phone: string;
-  email: string;
-  image: string;
+  email?: string;
+  notes?: string;
 };
 
 export const contactApi = {
@@ -26,25 +35,20 @@ export const contactApi = {
   },
 
   async getContact(id: string) {
-    const res = await apiClient.get<ContactResponseDto>(
-      endpoints.contactById(id),
-    );
+    const res = await apiClient.get<UserResponseDto>(endpoints.contactById(id));
     return res.data;
   },
 
-  async createContact(payload: Omit<ContactResponseDto, "id">) {
-    const res = await apiClient.post<ContactResponseDto>(
+  async createContact(payload: UpsertContactPayloadDto) {
+    const res = await apiClient.post<UserResponseDto>(
       endpoints.contacts,
       payload,
     );
     return res.data;
   },
 
-  async updateContact(
-    id: string,
-    payload: Partial<Omit<ContactResponseDto, "id">>,
-  ) {
-    const res = await apiClient.put<ContactResponseDto>(
+  async updateContact(id: string, payload: Partial<UpsertContactPayloadDto>) {
+    const res = await apiClient.put<UserResponseDto>(
       endpoints.contactById(id),
       payload,
     );

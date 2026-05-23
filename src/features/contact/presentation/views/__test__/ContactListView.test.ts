@@ -41,6 +41,10 @@ const wrapper = ({
 
 beforeEach(() => {
   mockedUseContactListViewModel.mockReturnValue({
+    filter: {
+      keyword: "",
+      onKeywordChange: vi.fn(),
+    },
     contacts: {
       items: [{ id: "1", name: "Budi", phone: "0812" }],
       loading: false,
@@ -60,8 +64,22 @@ describe("ContactListView", () => {
     expect(screen.getByText("0812")).toBeInTheDocument();
   });
 
+  it("opens the create modal when adding a contact", () => {
+    render(
+      React.createElement(wrapper, null, React.createElement(ContactListView)),
+    );
+
+    screen.getByRole("button", { name: "Add Contact" }).click();
+
+    expect(store.getState().contactCreateModal.isOpen).toBe(true);
+  });
+
   it("shows loading state", () => {
     mockedUseContactListViewModel.mockReturnValueOnce({
+      filter: {
+        keyword: "",
+        onKeywordChange: vi.fn(),
+      },
       contacts: {
         items: [],
         loading: true,
@@ -79,6 +97,10 @@ describe("ContactListView", () => {
 
   it("shows error state and forwards keyword changes", async () => {
     mockedUseContactListViewModel.mockReturnValueOnce({
+      filter: {
+        keyword: "",
+        onKeywordChange: vi.fn(),
+      },
       contacts: {
         items: [],
         loading: false,
@@ -94,6 +116,10 @@ describe("ContactListView", () => {
     expect(screen.getByText("Failed to load")).toBeInTheDocument();
 
     mockedUseContactListViewModel.mockReturnValueOnce({
+      filter: {
+        keyword: "",
+        onKeywordChange: vi.fn(),
+      },
       contacts: {
         items: [],
         loading: false,

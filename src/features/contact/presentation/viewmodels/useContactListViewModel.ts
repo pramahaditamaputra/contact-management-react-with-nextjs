@@ -3,6 +3,9 @@ import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { setKeyword } from "../state/contact-filter.slice";
 import { useContactsQuery } from "../queries/useContactsQuery";
 import { type PaginationState } from "@tanstack/react-table";
+import { openContactCreateModal } from "../state/contact-create-modal.slice";
+import { openContactEditModal } from "../state/contact-edit-modal.slice";
+import { Contact } from "../../domain/entities/contact";
 
 export const useContactListViewModel = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +32,14 @@ export const useContactListViewModel = () => {
     );
   };
 
+  const onCreateContact = () => {
+    dispatch(openContactCreateModal());
+  };
+
+  const onEditContact = (contact: Contact) => {
+    dispatch(openContactEditModal(contact));
+  };
+
   return {
     filter: {
       keyword,
@@ -45,6 +56,10 @@ export const useContactListViewModel = () => {
       loading,
       error: contactsQuery.error,
       refetch: contactsQuery.refetch,
+    },
+    actions: {
+      onCreateContact,
+      onEditContact,
     },
   };
 };

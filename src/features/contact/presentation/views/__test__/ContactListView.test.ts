@@ -2,12 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 import { ContactListView } from "../ContactListView";
-import contactFilterReducer from "../../state/contact-filter.slice";
-import contactCreateModalReducer from "../../state/contact-create-modal.slice";
-import contactEditModalReducer from "../../state/contact-edit-modal.slice";
 import { useContactListViewModel } from "../../viewmodels/useContactListViewModel";
 
 vi.mock("../../components/ContactCreateDialog", () => ({
@@ -26,76 +21,66 @@ vi.mock("../../viewmodels/useContactListViewModel", () => ({
 
 const mockedUseContactListViewModel = vi.mocked(useContactListViewModel);
 let onKeywordChangeMock = vi.fn();
-
-const store = configureStore({
-  reducer: {
-    contactFilter: contactFilterReducer,
-    contactCreateModal: contactCreateModalReducer,
-    contactEditModal: contactEditModalReducer,
-  },
-});
-
-const ReduxProvider = Provider as React.ComponentType<{
-  store: typeof store;
-  children?: React.ReactNode;
-}>;
-
-const wrapper = ({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.ReactNode => {
-  return React.createElement(ReduxProvider, { store }, children);
-};
+let onCreateContactMock = vi.fn();
+let onEditContactMock = vi.fn();
 
 beforeEach(() => {
   onKeywordChangeMock = vi.fn();
+  onCreateContactMock = vi.fn();
+  onEditContactMock = vi.fn();
   mockedUseContactListViewModel.mockReturnValue({
     filter: {
       keyword: "",
       onKeywordChange: onKeywordChangeMock,
     },
+    pagination: {
+      state: { pageIndex: 0, pageSize: 5 },
+      pageCount: 1,
+      onPaginationChange: vi.fn(),
+    },
     contacts: {
       items: [{ id: "1", name: "Budi", phone: "0812" }],
+      totalCount: 1,
       loading: false,
       error: null,
       refetch: vi.fn(),
+    },
+    actions: {
+      onCreateContact: onCreateContactMock,
+      onEditContact: onEditContactMock,
     },
   });
 });
 
 describe("ContactListView", () => {
   it("renders contacts", () => {
-    render(
-      React.createElement(wrapper, null, React.createElement(ContactListView)),
-    );
+    render(React.createElement(ContactListView));
 
     expect(screen.getByText("Budi")).toBeInTheDocument();
     expect(screen.getByText("0812")).toBeInTheDocument();
   });
 
-  it("opens the create modal when adding a contact", () => {
-    render(
-      React.createElement(wrapper, null, React.createElement(ContactListView)),
-    );
+  it("triggers create action from the view model", () => {
+    render(React.createElement(ContactListView));
 
     screen.getByRole("button", { name: "Add Contact" }).click();
 
-    expect(store.getState().contactCreateModal.isOpen).toBe(true);
+    expect(onCreateContactMock).toHaveBeenCalledTimes(1);
   });
 
-  it("opens the edit modal when selecting edit from a row menu", async () => {
+  it("triggers edit action from the view model", async () => {
     const user = userEvent.setup();
 
-    render(
-      React.createElement(wrapper, null, React.createElement(ContactListView)),
-    );
+    render(React.createElement(ContactListView));
 
     await user.click(screen.getByRole("button", { name: "Open menu" }));
     await user.click(screen.getByText("Edit"));
 
-    expect(store.getState().contactEditModal.isOpen).toBe(true);
-    expect(store.getState().contactEditModal.contact?.id).toBe("1");
+    expect(onEditContactMock).toHaveBeenCalledWith({
+      id: "1",
+      name: "Budi",
+      phone: "0812",
+    });
   });
 
   it("shows loading state", () => {
@@ -104,17 +89,25 @@ describe("ContactListView", () => {
         keyword: "",
         onKeywordChange: vi.fn(),
       },
+      pagination: {
+        state: { pageIndex: 0, pageSize: 5 },
+        pageCount: 1,
+        onPaginationChange: vi.fn(),
+      },
       contacts: {
         items: [],
+        totalCount: 0,
         loading: true,
         error: null,
         refetch: vi.fn(),
       },
+      actions: {
+        onCreateContact: vi.fn(),
+        onEditContact: vi.fn(),
+      },
     });
 
-    const { container } = render(
-      React.createElement(wrapper, null, React.createElement(ContactListView)),
-    );
+    const { container } = render(React.createElement(ContactListView));
 
     expect(
       container.querySelectorAll('[data-slot="skeleton"]').length,
@@ -127,25 +120,31 @@ describe("ContactListView", () => {
         keyword: "",
         onKeywordChange: vi.fn(),
       },
+      pagination: {
+        state: { pageIndex: 0, pageSize: 5 },
+        pageCount: 1,
+        onPaginationChange: vi.fn(),
+      },
       contacts: {
         items: [],
+        totalCount: 0,
         loading: false,
         error: new Error("failed"),
         refetch: vi.fn(),
       },
+      actions: {
+        onCreateContact: vi.fn(),
+        onEditContact: vi.fn(),
+      },
     });
 
-    render(
-      React.createElement(wrapper, null, React.createElement(ContactListView)),
-    );
+    render(React.createElement(ContactListView));
 
     expect(screen.getByText("Failed to load")).toBeInTheDocument();
   });
 
   it("forwards keyword changes from the search input", () => {
-    render(
-      React.createElement(wrapper, null, React.createElement(ContactListView)),
-    );
+    render(React.createElement(ContactListView));
 
     fireEvent.change(screen.getByPlaceholderText("Search..."), {
       target: { value: "siti" },

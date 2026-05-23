@@ -1,13 +1,6 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
-import { useCreateContactMutation } from "../queries/useCreateContactMutation";
-import { ContactFormValues } from "../forms/contact-form.types";
 import { ContactForm } from "./ContactForm";
-import {
-  closeContactCreateModal,
-  openContactCreateModal,
-} from "../state/contact-create-modal.slice";
 import {
   Dialog,
   DialogContent,
@@ -15,23 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/shared/components/ui/dialog";
+import { useContactCreateDialogViewModel } from "../viewmodels/useContactCreateDialogViewModel";
 
 export const ContactCreateDialog = () => {
-  const dispatch = useAppDispatch();
-  const isOpen = useAppSelector((state) => state.contactCreateModal.isOpen);
-  const createMutation = useCreateContactMutation();
-
-  const handleOpenChange = (nextOpen: boolean) => {
-    dispatch(nextOpen ? openContactCreateModal() : closeContactCreateModal());
-  };
-
-  const handleSubmit = async (values: ContactFormValues) => {
-    await createMutation.mutateAsync(values);
-    dispatch(closeContactCreateModal());
-  };
+  const { isOpen, onOpenChange, onSubmit, loading } =
+    useContactCreateDialogViewModel();
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Contact</DialogTitle>
@@ -40,8 +24,8 @@ export const ContactCreateDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <ContactForm
-          onSubmit={handleSubmit}
-          loading={createMutation.isPending}
+          onSubmit={onSubmit}
+          loading={loading}
           submitLabel="Create contact"
         />
       </DialogContent>

@@ -1,13 +1,6 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
-import { useUpdateContactMutation } from "../queries/useUpdateContactMutation";
-import { ContactFormValues } from "../forms/contact-form.types";
 import { ContactForm } from "./ContactForm";
-import {
-  closeContactEditModal,
-  openContactEditModal,
-} from "../state/contact-edit-modal.slice";
 import {
   Sheet,
   SheetContent,
@@ -15,35 +8,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/src/shared/components/ui/sheet";
+import { useContactEditSheetViewModel } from "../viewmodels/useContactEditSheetViewModel";
 
 export const ContactEditSheet = () => {
-  const dispatch = useAppDispatch();
-  const contact = useAppSelector((state) => state.contactEditModal.contact);
-  const isOpen = useAppSelector((state) => state.contactEditModal.isOpen);
-  const updateMutation = useUpdateContactMutation();
+  const { contact, isOpen, initialValues, onOpenChange, onSubmit, loading } =
+    useContactEditSheetViewModel();
 
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) {
-      dispatch(closeContactEditModal());
-      return;
-    }
-
-    if (!contact) return;
-
-    dispatch(openContactEditModal(contact));
-  };
-
-  const handleSubmit = async (values: ContactFormValues) => {
-    if (!contact) return;
-
-    await updateMutation.mutateAsync({ id: contact.id, payload: values });
-    dispatch(closeContactEditModal());
-  };
-
-  if (!contact) return null;
+  if (!contact || !initialValues) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full p-0 sm:max-w-xl">
         <div className="flex h-full flex-col">
           <SheetHeader className="border-b px-6 py-5 text-left">
@@ -56,15 +30,9 @@ export const ContactEditSheet = () => {
 
           <div className="flex-1 overflow-y-auto px-6 py-6">
             <ContactForm
-              initialValues={{
-                name: contact.name,
-                phone: contact.phone,
-                email: contact.email,
-                image: contact.image,
-                notes: contact.notes,
-              }}
-              onSubmit={handleSubmit}
-              loading={updateMutation.isPending}
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              loading={loading}
               submitLabel="Update contact"
             />
           </div>

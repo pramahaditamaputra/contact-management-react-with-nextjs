@@ -2,19 +2,15 @@
 
 import { useContactListViewModel } from "../viewmodels/useContactListViewModel";
 import { Button } from "@/src/shared/components/ui/button";
-import { useAppDispatch } from "@/src/store/hooks";
-import { openContactCreateModal } from "../state/contact-create-modal.slice";
 import { DataTable } from "@/src/shared/components/data-table/data-table";
 import { createContactColumns } from "../components/data-table/columns-contact";
 import { ContactCreateDialog } from "../components/ContactCreateDialog";
 import { ContactEditSheet } from "../components/ContactEditSheet";
-import { openContactEditModal } from "../state/contact-edit-modal.slice";
 
 export const ContactListView = () => {
-  const { contacts, filter, pagination } = useContactListViewModel();
-  const dispatch = useAppDispatch();
+  const { contacts, filter, pagination, actions } = useContactListViewModel();
   const columns = createContactColumns({
-    onEdit: (contact) => dispatch(openContactEditModal(contact)),
+    onEdit: actions.onEditContact,
   });
 
   if (contacts.error) return <div>Failed to load</div>;
@@ -35,7 +31,7 @@ export const ContactListView = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => dispatch(openContactCreateModal())}
+                  onClick={actions.onCreateContact}
                 >
                   Add Contact
                 </Button>

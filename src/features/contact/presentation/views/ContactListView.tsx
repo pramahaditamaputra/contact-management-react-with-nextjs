@@ -11,13 +11,12 @@ import { ContactEditSheet } from "../components/ContactEditSheet";
 import { openContactEditModal } from "../state/contact-edit-modal.slice";
 
 export const ContactListView = () => {
-  const { contacts } = useContactListViewModel();
+  const { contacts, filter } = useContactListViewModel();
   const dispatch = useAppDispatch();
   const columns = createContactColumns({
     onEdit: (contact) => dispatch(openContactEditModal(contact)),
   });
 
-  if (contacts.loading) return <div>Loading...</div>;
   if (contacts.error) return <div>Failed to load</div>;
 
   return (
@@ -28,7 +27,9 @@ export const ContactListView = () => {
             <DataTable
               data={contacts.items}
               columns={columns}
-              searchColumnId="name"
+              searchValue={filter.keyword}
+              onSearchChange={filter.onKeywordChange}
+              loading={contacts.loading}
               toolbarRight={
                 <Button
                   variant="outline"

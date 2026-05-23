@@ -16,7 +16,7 @@ describe("contactApi", () => {
     vi.clearAllMocks();
   });
 
-  it("fetches contacts with keyword params", async () => {
+  it("fetches contacts with search params", async () => {
     vi.mocked(apiClient.get).mockResolvedValueOnce({
       data: {
         users: [{ id: "1", name: "Budi", phone: "0812" }],
@@ -28,12 +28,12 @@ describe("contactApi", () => {
 
     await contactApi.getContacts("budi");
 
-    expect(apiClient.get).toHaveBeenCalledWith("/users", {
-      params: { keyword: "budi" },
+    expect(apiClient.get).toHaveBeenCalledWith("/users/search", {
+      params: { q: "budi" },
     });
   });
 
-  it("fetches contacts without keyword params", async () => {
+  it("fetches contacts without search params", async () => {
     vi.mocked(apiClient.get).mockResolvedValueOnce({
       data: {
         users: [{ id: "1", name: "Budi", phone: "0812" }],
@@ -45,9 +45,7 @@ describe("contactApi", () => {
 
     await contactApi.getContacts();
 
-    expect(apiClient.get).toHaveBeenCalledWith("/users", {
-      params: undefined,
-    });
+    expect(apiClient.get).toHaveBeenCalledWith("/users");
   });
 
   it("fetches a contact by id", async () => {

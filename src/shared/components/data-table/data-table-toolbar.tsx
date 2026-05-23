@@ -13,17 +13,31 @@ import { RowData, Table } from "@tanstack/react-table";
 type DataTableToolbarProps<TData extends RowData> = {
   table: Table<TData>;
   searchColumnId?: keyof TData;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
   toolbarRight?: React.ReactNode;
 };
 
 export function DataTableToolbar<TData extends RowData>({
   table,
   searchColumnId,
+  searchValue,
+  onSearchChange,
   toolbarRight,
 }: DataTableToolbarProps<TData>) {
   const columnId = searchColumnId ? String(searchColumnId) : "";
   const searchColumn = columnId ? table.getColumn(columnId) : undefined;
-  const filterValue = (searchColumn?.getFilterValue() as string) ?? "";
+  const filterValue =
+    searchValue ?? (searchColumn?.getFilterValue() as string) ?? "";
+
+  const handleSearchChange = (nextValue: string) => {
+    if (onSearchChange) {
+      onSearchChange(nextValue);
+      return;
+    }
+
+    searchColumn?.setFilterValue(nextValue);
+  };
 
   return (
     <div className="flex items-center justify-between gap-10 px-4 py-4 lg:px-6 lg:py-6">
@@ -31,7 +45,7 @@ export function DataTableToolbar<TData extends RowData>({
         <InputGroupInput
           placeholder="Search..."
           value={filterValue}
-          onChange={(event) => searchColumn?.setFilterValue(event.target.value)}
+          onChange={(event) => handleSearchChange(event.target.value)}
           className="max-w-sm"
         />
         <InputGroupAddon>

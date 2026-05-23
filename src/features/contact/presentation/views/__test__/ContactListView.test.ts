@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Provider } from "react-redux";
@@ -25,6 +25,7 @@ vi.mock("../../viewmodels/useContactListViewModel", () => ({
 }));
 
 const mockedUseContactListViewModel = vi.mocked(useContactListViewModel);
+let onKeywordChangeMock = vi.fn();
 
 const store = configureStore({
   reducer: {
@@ -48,10 +49,11 @@ const wrapper = ({
 };
 
 beforeEach(() => {
+  onKeywordChangeMock = vi.fn();
   mockedUseContactListViewModel.mockReturnValue({
     filter: {
       keyword: "",
-      onKeywordChange: vi.fn(),
+      onKeywordChange: onKeywordChangeMock,
     },
     contacts: {
       items: [{ id: "1", name: "Budi", phone: "0812" }],
@@ -110,14 +112,16 @@ describe("ContactListView", () => {
       },
     });
 
-    render(
+    const { container } = render(
       React.createElement(wrapper, null, React.createElement(ContactListView)),
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(
+      container.querySelectorAll('[data-slot="skeleton"]').length,
+    ).toBeGreaterThan(0);
   });
 
-  it("shows error state and forwards keyword changes", async () => {
+  it("shows error state", () => {
     mockedUseContactListViewModel.mockReturnValueOnce({
       filter: {
         keyword: "",
@@ -136,24 +140,17 @@ describe("ContactListView", () => {
     );
 
     expect(screen.getByText("Failed to load")).toBeInTheDocument();
+  });
 
-    mockedUseContactListViewModel.mockReturnValueOnce({
-      filter: {
-        keyword: "",
-        onKeywordChange: vi.fn(),
-      },
-      contacts: {
-        items: [],
-        loading: false,
-        error: null,
-        refetch: vi.fn(),
-      },
-    });
-
+  it("forwards keyword changes from the search input", () => {
     render(
       React.createElement(wrapper, null, React.createElement(ContactListView)),
     );
 
-    expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText("Search..."), {
+      target: { value: "siti" },
+    });
+
+    expect(onKeywordChangeMock).toHaveBeenCalledWith("siti");
   });
 });

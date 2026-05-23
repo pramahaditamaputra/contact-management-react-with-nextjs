@@ -29,9 +29,20 @@ export type UpsertContactPayloadDto = {
 
 export const contactApi = {
   async getContacts(keyword?: string) {
-    const res = await apiClient.get<ContactResponseDto>(endpoints.contacts, {
-      params: keyword ? { keyword } : undefined,
-    });
+    const normalizedKeyword = keyword?.trim();
+
+    if (normalizedKeyword) {
+      const res = await apiClient.get<ContactResponseDto>(
+        endpoints.contactSearch,
+        {
+          params: { q: normalizedKeyword },
+        },
+      );
+
+      return res.data;
+    }
+
+    const res = await apiClient.get<ContactResponseDto>(endpoints.contacts);
     return res.data;
   },
 

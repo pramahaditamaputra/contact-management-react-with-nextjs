@@ -6,6 +6,7 @@ export const useContactListViewModel = () => {
   const dispatch = useAppDispatch();
   const keyword = useAppSelector((state) => state.contactFilter.keyword);
   const contactsQuery = useContactsQuery(keyword);
+  const loading = contactsQuery.isLoading || contactsQuery.isFetching;
 
   return {
     filter: {
@@ -15,7 +16,7 @@ export const useContactListViewModel = () => {
     },
     contacts: {
       items: contactsQuery.data ?? [],
-      loading: contactsQuery.isLoading,
+      loading,
       error: contactsQuery.error,
       refetch: contactsQuery.refetch,
     },

@@ -11,6 +11,9 @@ export type DataTableProps<TData extends RowData> = {
   data: TData[];
   columns: ColumnDef<TData, unknown>[];
   searchColumnId?: keyof TData;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  loading?: boolean;
   toolbarRight?: React.ReactNode;
 };
 
@@ -18,6 +21,9 @@ export function DataTable<TData extends RowData>({
   data,
   columns,
   searchColumnId,
+  searchValue,
+  onSearchChange,
+  loading,
   toolbarRight,
 }: DataTableProps<TData>) {
   const { table } = useDataTable<TData>({ data, columns });
@@ -27,11 +33,17 @@ export function DataTable<TData extends RowData>({
       <DataTableToolbar
         table={table}
         searchColumnId={searchColumnId}
+        searchValue={searchValue}
+        onSearchChange={onSearchChange}
         toolbarRight={toolbarRight}
       />
 
       <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-        <DataTableContent table={table} columnsLength={columns.length} />
+        <DataTableContent
+          table={table}
+          columnsLength={columns.length}
+          loading={loading}
+        />
         <DataTablePagination table={table} />
       </div>
     </div>

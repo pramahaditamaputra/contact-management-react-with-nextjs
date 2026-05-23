@@ -8,12 +8,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/shared/components/ui/dialog";
-import { useContactCreateDialogViewModel } from "../viewmodels/useContactCreateDialogViewModel";
+import { ContactFormValues } from "../forms/contact-form.types";
 
-export const ContactCreateDialog = () => {
-  const { isOpen, onOpenChange, onSubmit, loading } =
-    useContactCreateDialogViewModel();
+type ContactCreateDialogProps = {
+  isOpen: boolean;
+  loading: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: (values: ContactFormValues) => Promise<void>;
+};
 
+export const ContactCreateDialog = ({
+  isOpen,
+  loading,
+  onOpenChange,
+  onSubmit,
+}: ContactCreateDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>

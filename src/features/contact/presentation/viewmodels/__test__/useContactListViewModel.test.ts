@@ -1,10 +1,12 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import contactFilterSlice from "../../state/contact-filter.slice";
+import contactCreateModalReducer from "../../state/contact-create-modal.slice";
+import contactEditModalReducer from "../../state/contact-edit-modal.slice";
 
 vi.mock("../../queries/useContactsQuery", () => ({
   useContactsQuery: vi.fn(() => ({
@@ -21,11 +23,46 @@ vi.mock("../../queries/useContactsQuery", () => ({
   })),
 }));
 
+const createMutateAsync = vi.fn().mockResolvedValue(undefined);
+const updateMutateAsync = vi.fn().mockResolvedValue(undefined);
+
+const deleteMutateAsync = vi.fn().mockResolvedValue(undefined);
+
+vi.mock("../../queries/useCreateContactMutation", () => ({
+  useCreateContactMutation: vi.fn(() => ({
+    mutateAsync: createMutateAsync,
+    isPending: false,
+    error: null,
+  })),
+}));
+
+vi.mock("../../queries/useUpdateContactMutation", () => ({
+  useUpdateContactMutation: vi.fn(() => ({
+    mutateAsync: updateMutateAsync,
+    isPending: false,
+    error: null,
+  })),
+}));
+
+vi.mock("../../queries/useDeleteContactMutation", () => ({
+  useDeleteContactMutation: vi.fn(() => ({
+    mutateAsync: deleteMutateAsync,
+    isPending: false,
+  })),
+}));
+
 import { useContactsQuery } from "../../queries/useContactsQuery";
 import { useContactListViewModel } from "../useContactListViewModel";
+import { useCreateContactMutation } from "../../queries/useCreateContactMutation";
+import { useUpdateContactMutation } from "../../queries/useUpdateContactMutation";
+import { useDeleteContactMutation } from "../../queries/useDeleteContactMutation";
 
 const store = configureStore({
-  reducer: { contactFilter: contactFilterSlice },
+  reducer: {
+    contactFilter: contactFilterSlice,
+    contactCreateModal: contactCreateModalReducer,
+    contactEditModal: contactEditModalReducer,
+  },
 });
 
 const queryClient = new QueryClient({
@@ -50,6 +87,12 @@ const wrapper = ({
 };
 
 describe("useContactListViewModel", () => {
+  beforeEach(() => {
+    createMutateAsync.mockClear();
+    updateMutateAsync.mockClear();
+    deleteMutateAsync.mockClear();
+  });
+
   it("returns keyword and contacts", () => {
     const { result } = renderHook(() => useContactListViewModel(), { wrapper });
 
@@ -85,5 +128,108 @@ describe("useContactListViewModel", () => {
     });
 
     expect(result.current.filter.keyword).toBe("siti");
+  });
+
+  it("handles create dialog state and submit flow", async () => {
+    const { result } = renderHook(() => useContactListViewModel(), { wrapper });
+
+    act(() => {
+      result.current.createDialog.onOpenChange(true);
+    });
+
+    expect(result.current.createDialog.isOpen).toBe(true);
+
+    await act(async () => {
+      await result.current.createDialog.onSubmit({
+        name: "Budi",
+        phone: "0812",
+        email: "",
+        image: "",
+        notes: "",
+      });
+    });
+
+    expect(createMutateAsync).toHaveBeenCalledWith({
+      name: "Budi",
+      phone: "0812",
+      email: "",
+      image: "",
+      notes: "",
+    });
+    expect(result.current.createDialog.isOpen).toBe(false);
+    expect(vi.mocked(useCreateContactMutation)).toHaveBeenCalled();
+  });
+
+  it("handles edit sheet state and submit flow", async () => {
+    const { result } = renderHook(() => useContactListViewModel(), { wrapper });
+
+    act(() => {
+      result.current.actions.onEditContact({
+        id: "1",
+        name: "Budi",
+        phone: "0812",
+      });
+    });
+
+    expect(result.current.editSheet.isOpen).toBe(true);
+    expect(result.current.editSheet.initialValues).toEqual({
+      name: "Budi",
+      phone: "0812",
+      email: undefined,
+      image: undefined,
+      notes: undefined,
+    });
+
+    await act(async () => {
+      await result.current.editSheet.onSubmit({
+        name: "Budi Updated",
+        phone: "0812",
+        email: "budi@example.com",
+        image: "https://example.com/avatar.png",
+        notes: "Friend",
+      });
+    });
+
+    expect(updateMutateAsync).toHaveBeenCalledWith({
+      id: "1",
+      payload: {
+        name: "Budi Updated",
+        phone: "0812",
+        email: "budi@example.com",
+        image: "https://example.com/avatar.png",
+        notes: "Friend",
+      },
+    });
+    expect(result.current.editSheet.isOpen).toBe(false);
+    expect(result.current.editSheet.contact).toBeNull();
+    expect(vi.mocked(useUpdateContactMutation)).toHaveBeenCalled();
+  });
+
+  it("opens the delete dialog and confirms deletion", async () => {
+    const { result } = renderHook(() => useContactListViewModel(), { wrapper });
+
+    act(() => {
+      result.current.actions.onDeleteContactRequest({
+        id: "1",
+        name: "Budi",
+        phone: "0812",
+      });
+    });
+
+    expect(result.current.deleteDialog.open).toBe(true);
+    expect(result.current.deleteDialog.contact).toEqual({
+      id: "1",
+      name: "Budi",
+      phone: "0812",
+    });
+
+    await act(async () => {
+      await result.current.deleteDialog.onConfirm();
+    });
+
+    expect(deleteMutateAsync).toHaveBeenCalledWith("1");
+    expect(result.current.deleteDialog.open).toBe(false);
+    expect(result.current.deleteDialog.contact).toBeNull();
+    expect(vi.mocked(useDeleteContactMutation)).toHaveBeenCalled();
   });
 });

@@ -6,11 +6,21 @@ import { DataTable } from "@/src/shared/components/data-table/data-table";
 import { createContactColumns } from "../components/data-table/columns-contact";
 import { ContactCreateDialog } from "../components/ContactCreateDialog";
 import { ContactEditSheet } from "../components/ContactEditSheet";
+import { ContactDeleteDialog } from "../components/ContactDeleteDialog";
 
 export const ContactListView = () => {
-  const { contacts, filter, pagination, actions } = useContactListViewModel();
+  const {
+    contacts,
+    filter,
+    pagination,
+    actions,
+    createDialog,
+    editSheet,
+    deleteDialog,
+  } = useContactListViewModel();
   const columns = createContactColumns({
     onEdit: actions.onEditContact,
+    onDelete: actions.onDeleteContactRequest,
   });
 
   if (contacts.error) return <div>Failed to load</div>;
@@ -40,8 +50,27 @@ export const ContactListView = () => {
           </div>
         </div>
       </div>
-      <ContactCreateDialog />
-      <ContactEditSheet />
+      <ContactCreateDialog
+        isOpen={createDialog.isOpen}
+        loading={createDialog.loading}
+        onOpenChange={createDialog.onOpenChange}
+        onSubmit={createDialog.onSubmit}
+      />
+      <ContactEditSheet
+        contact={editSheet.contact}
+        isOpen={editSheet.isOpen}
+        initialValues={editSheet.initialValues}
+        loading={editSheet.loading}
+        onOpenChange={editSheet.onOpenChange}
+        onSubmit={editSheet.onSubmit}
+      />
+      <ContactDeleteDialog
+        contact={deleteDialog.contact}
+        open={deleteDialog.open}
+        loading={deleteDialog.loading}
+        onOpenChange={deleteDialog.onOpenChange}
+        onConfirm={deleteDialog.onConfirm}
+      />
     </div>
   );
 };

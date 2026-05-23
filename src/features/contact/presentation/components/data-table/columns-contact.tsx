@@ -15,10 +15,12 @@ import { DataTableColumnHeader } from "@/src/shared/components/data-table/data-t
 
 type ContactColumnsOptions = {
   onEdit: (contact: Contact) => void;
+  onDelete: (contact: Contact) => void;
 };
 
 export const createContactColumns = ({
   onEdit,
+  onDelete,
 }: ContactColumnsOptions): ColumnDef<Contact, unknown>[] => [
   {
     accessorKey: "name",
@@ -81,7 +83,12 @@ export const createContactColumns = ({
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              variant="destructive"
+              onSelect={() => onDelete(row.original)}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

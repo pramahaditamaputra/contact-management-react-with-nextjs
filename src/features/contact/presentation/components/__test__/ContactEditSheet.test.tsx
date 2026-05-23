@@ -1,6 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
-
-const mutateAsync = vi.fn().mockResolvedValue(undefined);
+import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/src/shared/components/ui/sheet", () => ({
   Sheet: ({
@@ -33,59 +31,38 @@ vi.mock("@/src/shared/components/ui/sheet", () => ({
   ),
 }));
 
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import contactEditModalReducer from "../../state/contact-edit-modal.slice";
 import { ContactEditSheet } from "../ContactEditSheet";
-import * as updateContactMutationModule from "../../queries/useUpdateContactMutation";
 
-const ReduxProvider = Provider as React.ComponentType<{
-  store: ReturnType<typeof makeStore>;
-  children?: React.ReactNode;
-}>;
+describe("ContactEditSheet", () => {
+  it("shows the selected contact and submits updates", async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
 
-function makeStore() {
-  return configureStore({
-    reducer: {
-      contactEditModal: contactEditModalReducer,
-    },
-    preloadedState: {
-      contactEditModal: {
-        isOpen: true,
-        contact: {
+    render(
+      <ContactEditSheet
+        contact={{
           id: "1",
           name: "Budi",
           phone: "0812",
           email: "budi@example.com",
           image: "https://example.com/avatar.png",
           notes: "Friend",
-        },
-      },
-    },
-  });
-}
-
-describe("ContactEditSheet", () => {
-  beforeEach(() => {
-    vi.spyOn(
-      updateContactMutationModule,
-      "useUpdateContactMutation",
-    ).mockReturnValue({
-      mutateAsync,
-      isPending: false,
-    } as never);
-  });
-
-  it("shows the selected contact and submits updates", async () => {
-    const user = userEvent.setup();
-    const store = makeStore();
-
-    render(
-      <ReduxProvider store={store}>
-        <ContactEditSheet />
-      </ReduxProvider>,
+        }}
+        isOpen
+        initialValues={{
+          name: "Budi",
+          phone: "0812",
+          email: "budi@example.com",
+          image: "https://example.com/avatar.png",
+          notes: "Friend",
+        }}
+        loading={false}
+        onOpenChange={onOpenChange}
+        onSubmit={onSubmit}
+      />,
     );
 
     expect(screen.getByText("Edit Contact")).toBeInTheDocument();
@@ -95,31 +72,42 @@ describe("ContactEditSheet", () => {
     await user.type(screen.getByLabelText("Name"), "Budi Updated");
     await user.click(screen.getByRole("button", { name: "Update contact" }));
 
-    expect(mutateAsync).toHaveBeenCalledWith({
-      id: "1",
-      payload: {
-        name: "Budi Updated",
-        phone: "0812",
-        email: "budi@example.com",
-        image: "https://example.com/avatar.png",
-        notes: "Friend",
-      },
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({
+      name: "Budi Updated",
+      phone: "0812",
+      email: "budi@example.com",
+      image: "https://example.com/avatar.png",
+      notes: "Friend",
     });
-    expect(store.getState().contactEditModal.isOpen).toBe(false);
   });
 
   it("closes the sidebar when requested", async () => {
     const user = userEvent.setup();
-    const store = makeStore();
+    const onOpenChange = vi.fn();
 
     render(
-      <ReduxProvider store={store}>
-        <ContactEditSheet />
-      </ReduxProvider>,
+      <ContactEditSheet
+        contact={{
+          id: "1",
+          name: "Budi",
+          phone: "0812",
+        }}
+        isOpen
+        initialValues={{
+          name: "Budi",
+          phone: "0812",
+          email: undefined,
+          image: undefined,
+          notes: undefined,
+        }}
+        loading={false}
+        onOpenChange={onOpenChange}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+      />,
     );
 
     await user.click(screen.getByRole("button", { name: "close" }));
 
-    expect(store.getState().contactEditModal.isOpen).toBe(false);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 });

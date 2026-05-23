@@ -8,12 +8,26 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/src/shared/components/ui/sheet";
-import { useContactEditSheetViewModel } from "../viewmodels/useContactEditSheetViewModel";
+import { Contact } from "../../domain/entities/contact";
+import { ContactFormValues } from "../forms/contact-form.types";
 
-export const ContactEditSheet = () => {
-  const { contact, isOpen, initialValues, onOpenChange, onSubmit, loading } =
-    useContactEditSheetViewModel();
+type ContactEditSheetProps = {
+  contact: Contact | null;
+  isOpen: boolean;
+  initialValues: ContactFormValues | null;
+  loading: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: (values: ContactFormValues) => Promise<void>;
+};
 
+export const ContactEditSheet = ({
+  contact,
+  isOpen,
+  initialValues,
+  loading,
+  onOpenChange,
+  onSubmit,
+}: ContactEditSheetProps) => {
   if (!contact || !initialValues) return null;
 
   return (

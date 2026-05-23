@@ -15,6 +15,21 @@ vi.mock("../../components/ContactEditSheet", () => ({
     React.createElement("div", { "data-testid": "contact-edit-sheet" }),
 }));
 
+vi.mock("../../components/ContactDeleteDialog", () => ({
+  ContactDeleteDialog: ({
+    contact,
+    open,
+  }: {
+    contact: { name: string } | null;
+    open: boolean;
+  }) =>
+    React.createElement("div", {
+      "data-testid": "contact-delete-dialog",
+      "data-open": String(open),
+      "data-contact": contact?.name ?? "",
+    }),
+}));
+
 vi.mock("../../viewmodels/useContactListViewModel", () => ({
   useContactListViewModel: vi.fn(),
 }));
@@ -23,11 +38,13 @@ const mockedUseContactListViewModel = vi.mocked(useContactListViewModel);
 let onKeywordChangeMock = vi.fn();
 let onCreateContactMock = vi.fn();
 let onEditContactMock = vi.fn();
+let onDeleteContactRequestMock = vi.fn();
 
 beforeEach(() => {
   onKeywordChangeMock = vi.fn();
   onCreateContactMock = vi.fn();
   onEditContactMock = vi.fn();
+  onDeleteContactRequestMock = vi.fn();
   mockedUseContactListViewModel.mockReturnValue({
     filter: {
       keyword: "",
@@ -45,9 +62,33 @@ beforeEach(() => {
       error: null,
       refetch: vi.fn(),
     },
+    createDialog: {
+      isOpen: false,
+      loading: false,
+      error: null,
+      onOpenChange: vi.fn(),
+      onSubmit: vi.fn(),
+    },
+    editSheet: {
+      contact: null,
+      isOpen: false,
+      initialValues: null,
+      loading: false,
+      error: null,
+      onOpenChange: vi.fn(),
+      onSubmit: vi.fn(),
+    },
+    deleteDialog: {
+      contact: null,
+      open: false,
+      loading: false,
+      onOpenChange: vi.fn(),
+      onConfirm: vi.fn(),
+    },
     actions: {
       onCreateContact: onCreateContactMock,
       onEditContact: onEditContactMock,
+      onDeleteContactRequest: onDeleteContactRequestMock,
     },
   });
 });
@@ -83,6 +124,21 @@ describe("ContactListView", () => {
     });
   });
 
+  it("triggers delete action from the row menu", async () => {
+    const user = userEvent.setup();
+
+    render(React.createElement(ContactListView));
+
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
+    await user.click(screen.getByText("Delete"));
+
+    expect(onDeleteContactRequestMock).toHaveBeenCalledWith({
+      id: "1",
+      name: "Budi",
+      phone: "0812",
+    });
+  });
+
   it("shows loading state", () => {
     mockedUseContactListViewModel.mockReturnValueOnce({
       filter: {
@@ -101,9 +157,33 @@ describe("ContactListView", () => {
         error: null,
         refetch: vi.fn(),
       },
+      createDialog: {
+        isOpen: false,
+        loading: false,
+        error: null,
+        onOpenChange: vi.fn(),
+        onSubmit: vi.fn(),
+      },
+      editSheet: {
+        contact: null,
+        isOpen: false,
+        initialValues: null,
+        loading: false,
+        error: null,
+        onOpenChange: vi.fn(),
+        onSubmit: vi.fn(),
+      },
+      deleteDialog: {
+        contact: null,
+        open: false,
+        loading: false,
+        onOpenChange: vi.fn(),
+        onConfirm: vi.fn(),
+      },
       actions: {
         onCreateContact: vi.fn(),
         onEditContact: vi.fn(),
+        onDeleteContactRequest: vi.fn(),
       },
     });
 
@@ -132,9 +212,33 @@ describe("ContactListView", () => {
         error: new Error("failed"),
         refetch: vi.fn(),
       },
+      createDialog: {
+        isOpen: false,
+        loading: false,
+        error: null,
+        onOpenChange: vi.fn(),
+        onSubmit: vi.fn(),
+      },
+      editSheet: {
+        contact: null,
+        isOpen: false,
+        initialValues: null,
+        loading: false,
+        error: null,
+        onOpenChange: vi.fn(),
+        onSubmit: vi.fn(),
+      },
+      deleteDialog: {
+        contact: null,
+        open: false,
+        loading: false,
+        onOpenChange: vi.fn(),
+        onConfirm: vi.fn(),
+      },
       actions: {
         onCreateContact: vi.fn(),
         onEditContact: vi.fn(),
+        onDeleteContactRequest: vi.fn(),
       },
     });
 

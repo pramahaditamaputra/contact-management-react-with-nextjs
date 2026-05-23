@@ -1,6 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
-
-const mutateAsync = vi.fn().mockResolvedValue(undefined);
+import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/src/shared/components/ui/dialog", () => ({
   Dialog: ({
@@ -36,78 +34,53 @@ vi.mock("@/src/shared/components/ui/dialog", () => ({
   ),
 }));
 
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import contactCreateModalReducer from "../../state/contact-create-modal.slice";
 import { ContactCreateDialog } from "../ContactCreateDialog";
-import * as createContactMutationModule from "../../queries/useCreateContactMutation";
-
-const store = configureStore({
-  reducer: {
-    contactCreateModal: contactCreateModalReducer,
-  },
-  preloadedState: {
-    contactCreateModal: { isOpen: false },
-  },
-});
-
-const ReduxProvider = Provider as React.ComponentType<{
-  store: typeof store;
-  children?: React.ReactNode;
-}>;
 
 describe("ContactCreateDialog", () => {
-  beforeEach(() => {
-    vi.spyOn(
-      createContactMutationModule,
-      "useCreateContactMutation",
-    ).mockReturnValue({
-      mutateAsync,
-      isPending: false,
-    } as never);
-  });
-
   it("opens and submits the form", async () => {
     const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
 
     render(
-      <ReduxProvider store={store}>
-        <ContactCreateDialog />
-      </ReduxProvider>,
+      <ContactCreateDialog
+        isOpen
+        loading={false}
+        onOpenChange={onOpenChange}
+        onSubmit={onSubmit}
+      />,
     );
-
-    await user.click(screen.getByRole("button", { name: "open" }));
-    expect(store.getState().contactCreateModal.isOpen).toBe(true);
 
     await user.type(screen.getByLabelText("Name"), "Budi");
     await user.type(screen.getByLabelText("Phone"), "0812");
     await user.click(screen.getByRole("button", { name: "Create contact" }));
 
-    expect(mutateAsync).toHaveBeenCalledWith({
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({
       name: "Budi",
       phone: "0812",
       email: "",
       image: "",
       notes: "",
     });
-    expect(store.getState().contactCreateModal.isOpen).toBe(false);
   });
 
   it("closes the dialog when requested", async () => {
     const user = userEvent.setup();
-
-    store.dispatch({ type: "contactCreateModal/openContactCreateModal" });
+    const onOpenChange = vi.fn();
 
     render(
-      <ReduxProvider store={store}>
-        <ContactCreateDialog />
-      </ReduxProvider>,
+      <ContactCreateDialog
+        isOpen
+        loading={false}
+        onOpenChange={onOpenChange}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+      />,
     );
 
     await user.click(screen.getByRole("button", { name: "close" }));
 
-    expect(store.getState().contactCreateModal.isOpen).toBe(false);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 });

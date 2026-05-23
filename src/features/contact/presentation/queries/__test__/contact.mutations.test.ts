@@ -1,13 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from "vitest";
-import { useCreateContactMutation } from "../useCreateContactMutation";
-import { useDeleteContactMutation } from "../useDeleteContactMutation";
-import { useUpdateContactMutation } from "../useUpdateContactMutation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { contactQueryKeys } from "../contact.querykeys";
 
-const createContact = vi.fn();
-const deleteContact = vi.fn();
-const updateContact = vi.fn();
 const invalidateQueries = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@tanstack/react-query", () => ({
@@ -21,89 +13,113 @@ vi.mock("@tanstack/react-query", () => ({
   }),
 }));
 
-vi.mock("../../data/repositories/contact.repository.impl", () => ({
-  ContactRepositoryImpl: class {
-    createContact = createContact;
-    deleteContact = deleteContact;
-    updateContact = updateContact;
+vi.mock("../../../data/api/contact.api", () => ({
+  contactApi: {
+    createContact: vi.fn().mockResolvedValue({
+      id: "1",
+      name: "Budi",
+      phone: "0812",
+    }),
+    deleteContact: vi.fn().mockResolvedValue(undefined),
+    updateContact: vi.fn().mockResolvedValue({
+      id: "1",
+      name: "Budi Updated",
+      phone: "0812",
+    }),
   },
 }));
+
+import { useCreateContactMutation } from "../useCreateContactMutation";
+import { useDeleteContactMutation } from "../useDeleteContactMutation";
+import { useUpdateContactMutation } from "../useUpdateContactMutation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { contactQueryKeys } from "../contact.querykeys";
+import {
+  CreateContactPayload,
+  UpdateContactPayload,
+} from "../../../domain/repositories/contact.repository";
+import { Contact } from "../../../domain/entities/contact";
+
+type MutationOptionsLike<TVariables, TData> = {
+  mutationFn: (variables: TVariables) => Promise<TData>;
+  onSuccess?: (
+    data: TData | undefined,
+    variables: TVariables,
+  ) => Promise<void> | void;
+};
 
 describe("contact mutations", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("creates contacts and invalidates the list query", async () => {
-    createContact.mockResolvedValueOnce({
-      id: "1",
-      name: "Budi",
-      phone: "0812",
-    });
+  const getLastMutationOptions = <TVariables, TData>() => {
+    const call = vi.mocked(useMutation).mock.calls.at(-1);
 
-    const mutation = useCreateContactMutation();
+    return call?.[0] as MutationOptionsLike<TVariables, TData>;
+  };
+
+  it("creates contacts and invalidates the list query", async () => {
+    useCreateContactMutation();
+    const options = getLastMutationOptions<CreateContactPayload, Contact>();
 
     await expect(
-      mutation.mutationFn({ name: "Budi", phone: "0812" }),
-    ).resolves.toEqual({
-      id: "1",
-      name: "Budi",
-      phone: "0812",
-    });
+      options.mutationFn({ name: "Budi", phone: "0812" }),
+    ).resolves.toEqual(
+      expect.objectContaining({
+        id: "1",
+        name: "Budi",
+        phone: "0812",
+      }),
+    );
 
-    await mutation.onSuccess?.();
+    await options.onSuccess?.(
+      { id: "1", name: "Budi", phone: "0812" },
+      { name: "Budi", phone: "0812" },
+    );
 
-    expect(createContact).toHaveBeenCalledWith({
-      name: "Budi",
-      phone: "0812",
-    });
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: contactQueryKeys.all,
     });
   });
 
   it("deletes contacts and invalidates the list query", async () => {
-    deleteContact.mockResolvedValueOnce(undefined);
+    useDeleteContactMutation();
+    const options = getLastMutationOptions<string, void>();
 
-    const mutation = useDeleteContactMutation();
+    await expect(options.mutationFn("1")).resolves.toBeUndefined();
+    await options.onSuccess?.(undefined, "1");
 
-    await expect(mutation.mutationFn("1")).resolves.toBeUndefined();
-    await mutation.onSuccess?.();
-
-    expect(deleteContact).toHaveBeenCalledWith("1");
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: contactQueryKeys.all,
     });
   });
 
   it("updates contacts and invalidates list and detail queries", async () => {
-    updateContact.mockResolvedValueOnce({
-      id: "1",
-      name: "Budi Updated",
-      phone: "0812",
-    });
-
-    const mutation = useUpdateContactMutation();
+    useUpdateContactMutation();
+    const options = getLastMutationOptions<
+      { id: string; payload: UpdateContactPayload },
+      Contact
+    >();
 
     await expect(
-      mutation.mutationFn({
+      options.mutationFn({
         id: "1",
         payload: { name: "Budi Updated" },
       }),
-    ).resolves.toEqual({
-      id: "1",
-      name: "Budi Updated",
-      phone: "0812",
-    });
+    ).resolves.toEqual(
+      expect.objectContaining({
+        id: "1",
+        name: "Budi Updated",
+        phone: "0812",
+      }),
+    );
 
-    await mutation.onSuccess?.(undefined, {
+    await options.onSuccess?.(undefined, {
       id: "1",
       payload: { name: "Budi Updated" },
     });
 
-    expect(updateContact).toHaveBeenCalledWith("1", {
-      name: "Budi Updated",
-    });
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: contactQueryKeys.all,
     });

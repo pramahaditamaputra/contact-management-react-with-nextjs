@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contactQueryKeys } from "./contact.querykeys";
+import { contactQueryKeys } from "../contact.querykeys";
 
 describe("contactQueryKeys", () => {
   it("builds stable list and detail keys", () => {

@@ -1,38 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import contactCreateModalReducer from "../../state/contact-create-modal.slice";
-import { ContactCreateDialog } from "../ContactCreateDialog";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 
 const mutateAsync = vi.fn().mockResolvedValue(undefined);
-
-vi.mock("../queries/useCreateContactMutation", () => ({
-  useCreateContactMutation: () => ({
-    mutateAsync,
-    isPending: false,
-  }),
-}));
-
-vi.mock("./ContactForm", () => ({
-  ContactForm: ({
-    onSubmit,
-    submitLabel,
-  }: {
-    onSubmit: (values: never) => Promise<void>;
-    submitLabel?: string;
-  }) => (
-    <button
-      type="button"
-      onClick={() =>
-        onSubmit({ name: "Budi", phone: "0812", email: "", notes: "" } as never)
-      }
-    >
-      {submitLabel ?? "Save"}
-    </button>
-  ),
-}));
 
 vi.mock("@/src/shared/components/ui/dialog", () => ({
   Dialog: ({
@@ -68,6 +36,14 @@ vi.mock("@/src/shared/components/ui/dialog", () => ({
   ),
 }));
 
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import contactCreateModalReducer from "../../state/contact-create-modal.slice";
+import { ContactCreateDialog } from "../ContactCreateDialog";
+import * as createContactMutationModule from "../../queries/useCreateContactMutation";
+
 const store = configureStore({
   reducer: {
     contactCreateModal: contactCreateModalReducer,
@@ -83,6 +59,16 @@ const ReduxProvider = Provider as React.ComponentType<{
 }>;
 
 describe("ContactCreateDialog", () => {
+  beforeEach(() => {
+    vi.spyOn(
+      createContactMutationModule,
+      "useCreateContactMutation",
+    ).mockReturnValue({
+      mutateAsync,
+      isPending: false,
+    } as never);
+  });
+
   it("opens and submits the form", async () => {
     const user = userEvent.setup();
 
@@ -95,6 +81,8 @@ describe("ContactCreateDialog", () => {
     await user.click(screen.getByRole("button", { name: "open" }));
     expect(store.getState().contactCreateModal.isOpen).toBe(true);
 
+    await user.type(screen.getByLabelText("Name"), "Budi");
+    await user.type(screen.getByLabelText("Phone"), "0812");
     await user.click(screen.getByRole("button", { name: "Create contact" }));
 
     expect(mutateAsync).toHaveBeenCalledWith({

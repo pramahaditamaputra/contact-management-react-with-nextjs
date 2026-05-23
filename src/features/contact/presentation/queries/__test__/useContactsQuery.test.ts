@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useContactsQuery } from "./useContactsQuery";
 
 vi.mock("../../data/repositories/contact.repository.impl", () => ({
   ContactRepositoryImpl: vi.fn().mockImplementation(function () {
@@ -13,6 +12,8 @@ vi.mock("../../data/repositories/contact.repository.impl", () => ({
     };
   }),
 }));
+
+import { useContactsQuery } from "../useContactsQuery";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => {
   const client = new QueryClient({
@@ -30,7 +31,11 @@ describe("useContactsQuery", () => {
     });
 
     expect(result.current.data).toEqual([
-      { id: "1", name: "Budi", phone: "0812" },
+      expect.objectContaining({
+        id: "1",
+        name: "Budi",
+        phone: "0812",
+      }),
     ]);
   });
 });

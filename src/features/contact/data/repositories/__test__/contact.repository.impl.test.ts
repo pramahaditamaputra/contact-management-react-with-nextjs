@@ -1,8 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ContactRepositoryImpl } from "../contact.repository.impl";
-import { contactApi } from "../../api/contact.api";
 
-vi.mock("../api/contact.api", () => ({
+vi.mock("../../api/contact.api", () => ({
   contactApi: {
     getContacts: vi.fn(),
     getContact: vi.fn(),
@@ -12,15 +10,23 @@ vi.mock("../api/contact.api", () => ({
   },
 }));
 
+import { ContactRepositoryImpl } from "../contact.repository.impl";
+import { contactApi } from "../../api/contact.api";
+
 describe("ContactRepositoryImpl", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("maps api result to entity on getContacts", async () => {
-    vi.mocked(contactApi.getContacts).mockResolvedValue([
-      { id: "1", firstName: "Budi", lastName: "Santoso", phone: "0812" },
-    ]);
+    vi.mocked(contactApi.getContacts).mockResolvedValue({
+      users: [
+        { id: "1", firstName: "Budi", lastName: "Santoso", phone: "0812" },
+      ],
+      total: 1,
+      skip: 0,
+      limit: 10,
+    });
 
     const repo = new ContactRepositoryImpl();
     const result = await repo.getContacts();
@@ -37,9 +43,14 @@ describe("ContactRepositoryImpl", () => {
   });
 
   it("forwards keyword to api on getContacts", async () => {
-    vi.mocked(contactApi.getContacts).mockResolvedValue([
-      { id: "2", firstName: "Siti", lastName: "Aminah", phone: "0813" },
-    ]);
+    vi.mocked(contactApi.getContacts).mockResolvedValue({
+      users: [
+        { id: "2", firstName: "Siti", lastName: "Aminah", phone: "0813" },
+      ],
+      total: 1,
+      skip: 0,
+      limit: 10,
+    });
 
     const repo = new ContactRepositoryImpl();
     const result = await repo.getContacts("siti");

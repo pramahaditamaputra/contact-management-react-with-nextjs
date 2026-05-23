@@ -18,7 +18,12 @@ describe("contactApi", () => {
 
   it("fetches contacts with keyword params", async () => {
     vi.mocked(apiClient.get).mockResolvedValueOnce({
-      data: [{ id: "1", name: "Budi", phone: "0812" }],
+      data: {
+        users: [{ id: "1", name: "Budi", phone: "0812" }],
+        total: 1,
+        skip: 0,
+        limit: 10,
+      },
     } as never);
 
     await contactApi.getContacts("budi");
@@ -30,7 +35,12 @@ describe("contactApi", () => {
 
   it("fetches contacts without keyword params", async () => {
     vi.mocked(apiClient.get).mockResolvedValueOnce({
-      data: [{ id: "1", name: "Budi", phone: "0812" }],
+      data: {
+        users: [{ id: "1", name: "Budi", phone: "0812" }],
+        total: 1,
+        skip: 0,
+        limit: 10,
+      },
     } as never);
 
     await contactApi.getContacts();

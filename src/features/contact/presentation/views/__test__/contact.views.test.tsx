@@ -2,13 +2,13 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { ContactCreateView } from "./ContactCreateView";
-import { ContactDetailView } from "./ContactDetailView";
-import { ContactEditView } from "./ContactEditView";
-import { ContactForm } from "../components/ContactForm";
-import { useContactCreateViewModel } from "../viewmodels/useContactCreateViewModel";
-import { useContactDetailViewModel } from "../viewmodels/useContactDetailViewModel";
-import { useContactEditViewModel } from "../viewmodels/useContactEditViewModel";
+import { ContactCreateView } from "../ContactCreateView";
+import { ContactDetailView } from "../ContactDetailView";
+import { ContactEditView } from "../ContactEditView";
+import { ContactForm } from "../../components/ContactForm";
+import { useContactCreateViewModel } from "../../viewmodels/useContactCreateViewModel";
+import { useContactDetailViewModel } from "../../viewmodels/useContactDetailViewModel";
+import { useContactEditViewModel } from "../../viewmodels/useContactEditViewModel";
 
 vi.mock("next/link", () => ({
   default: ({

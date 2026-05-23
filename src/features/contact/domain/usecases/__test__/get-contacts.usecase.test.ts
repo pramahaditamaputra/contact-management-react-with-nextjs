@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { GetContactsUseCase } from "./get-contacts.usecase";
+import { GetContactsUseCase } from "../get-contacts.usecase";
 
 describe("GetContactsUseCase", () => {
   it("calls repository with keyword", async () => {

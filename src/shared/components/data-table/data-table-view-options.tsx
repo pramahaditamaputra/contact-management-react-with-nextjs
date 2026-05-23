@@ -1,9 +1,7 @@
 "use client";
 
-import { type Table } from "@tanstack/react-table";
+import { type Table, type RowData } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
-
-import { Button } from "@/src/shared/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,13 +9,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/src/shared/components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 
-export function DataTableViewOptions<TData>({
-  table,
-}: {
+type DataTableViewOptionsProps<TData extends RowData> = {
   table: Table<TData>;
-}) {
+};
+
+export function DataTableViewOptions<TData extends RowData>({
+  table,
+}: DataTableViewOptionsProps<TData>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,27 +31,27 @@ export function DataTableViewOptions<TData>({
           View
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end" className="w-[150px]">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
+
         {table
           .getAllColumns()
           .filter(
             (column) =>
               typeof column.accessorFn !== "undefined" && column.getCanHide(),
           )
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {column.id}
-              </DropdownMenuCheckboxItem>
-            );
-          })}
+          .map((column) => (
+            <DropdownMenuCheckboxItem
+              key={column.id}
+              className="capitalize"
+              checked={column.getIsVisible()}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
+            >
+              {column.id}
+            </DropdownMenuCheckboxItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

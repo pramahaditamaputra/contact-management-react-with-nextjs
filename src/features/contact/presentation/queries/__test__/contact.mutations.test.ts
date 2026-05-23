@@ -1,9 +1,9 @@
 import { describe, expect, it, beforeEach, vi } from "vitest";
-import { useCreateContactMutation } from "./useCreateContactMutation";
-import { useDeleteContactMutation } from "./useDeleteContactMutation";
-import { useUpdateContactMutation } from "./useUpdateContactMutation";
+import { useCreateContactMutation } from "../useCreateContactMutation";
+import { useDeleteContactMutation } from "../useDeleteContactMutation";
+import { useUpdateContactMutation } from "../useUpdateContactMutation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { contactQueryKeys } from "./contact.querykeys";
+import { contactQueryKeys } from "../contact.querykeys";
 
 const createContact = vi.fn();
 const deleteContact = vi.fn();

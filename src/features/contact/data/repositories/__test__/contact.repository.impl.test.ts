@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ContactRepositoryImpl } from "./contact.repository.impl";
-import { contactApi } from "../api/contact.api";
+import { ContactRepositoryImpl } from "../contact.repository.impl";
+import { contactApi } from "../../api/contact.api";
 
 vi.mock("../api/contact.api", () => ({
   contactApi: {
@@ -19,31 +19,48 @@ describe("ContactRepositoryImpl", () => {
 
   it("maps api result to entity on getContacts", async () => {
     vi.mocked(contactApi.getContacts).mockResolvedValue([
-      { id: "1", name: "Budi", phone: "0812" },
+      { id: "1", firstName: "Budi", lastName: "Santoso", phone: "0812" },
     ]);
 
     const repo = new ContactRepositoryImpl();
     const result = await repo.getContacts();
 
-    expect(result).toEqual([{ id: "1", name: "Budi", phone: "0812" }]);
+    expect(result).toEqual([
+      {
+        id: "1",
+        name: "Budi Santoso",
+        phone: "0812",
+        email: "N/A",
+        image: "https://via.placeholder.com/150",
+      },
+    ]);
   });
 
   it("forwards keyword to api on getContacts", async () => {
     vi.mocked(contactApi.getContacts).mockResolvedValue([
-      { id: "2", name: "Siti", phone: "0813" },
+      { id: "2", firstName: "Siti", lastName: "Aminah", phone: "0813" },
     ]);
 
     const repo = new ContactRepositoryImpl();
     const result = await repo.getContacts("siti");
 
     expect(contactApi.getContacts).toHaveBeenCalledWith("siti");
-    expect(result).toEqual([{ id: "2", name: "Siti", phone: "0813" }]);
+    expect(result).toEqual([
+      {
+        id: "2",
+        name: "Siti Aminah",
+        phone: "0813",
+        email: "N/A",
+        image: "https://via.placeholder.com/150",
+      },
+    ]);
   });
 
   it("returns contact entity or null on getContact", async () => {
     vi.mocked(contactApi.getContact).mockResolvedValue({
       id: "1",
-      name: "Budi",
+      firstName: "Budi",
+      lastName: "Santoso",
       phone: "0812",
     });
 
@@ -51,9 +68,15 @@ describe("ContactRepositoryImpl", () => {
     const result = await repo.getContact("1");
 
     expect(contactApi.getContact).toHaveBeenCalledWith("1");
-    expect(result).toEqual({ id: "1", name: "Budi", phone: "0812" });
+    expect(result).toEqual({
+      id: "1",
+      name: "Budi Santoso",
+      phone: "0812",
+      email: "N/A",
+      image: "https://via.placeholder.com/150",
+    });
 
-    vi.mocked(contactApi.getContact).mockResolvedValue(null as any);
+    vi.mocked(contactApi.getContact).mockResolvedValue(null as never);
     const result2 = await repo.getContact("2");
     expect(result2).toBeNull();
   });
@@ -61,7 +84,8 @@ describe("ContactRepositoryImpl", () => {
   it("calls createContact api", async () => {
     vi.mocked(contactApi.createContact).mockResolvedValue({
       id: "1",
-      name: "Budi",
+      firstName: "Budi",
+      lastName: "Santoso",
       phone: "0812",
     });
 
@@ -77,7 +101,8 @@ describe("ContactRepositoryImpl", () => {
   it("maps api result to entity on updateContact and calls api", async () => {
     vi.mocked(contactApi.updateContact).mockResolvedValue({
       id: "1",
-      name: "Budi Updated",
+      firstName: "Budi",
+      lastName: "Updated",
       phone: "0812",
     });
 
@@ -87,7 +112,13 @@ describe("ContactRepositoryImpl", () => {
     expect(contactApi.updateContact).toHaveBeenCalledWith("1", {
       name: "Budi Updated",
     });
-    expect(result).toEqual({ id: "1", name: "Budi Updated", phone: "0812" });
+    expect(result).toEqual({
+      id: "1",
+      name: "Budi Updated",
+      phone: "0812",
+      email: "N/A",
+      image: "https://via.placeholder.com/150",
+    });
   });
 
   it("calls deleteContact api", async () => {

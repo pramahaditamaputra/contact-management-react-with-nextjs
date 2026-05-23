@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ContactForm } from "./ContactForm";
+import { ContactForm } from "../ContactForm";
 
 describe("ContactForm", () => {
   it("renders initial values and resets when props change", async () => {
@@ -18,12 +18,10 @@ describe("ContactForm", () => {
       />,
     );
 
-    expect(screen.getByPlaceholderText("Name")).toHaveValue("Budi");
-    expect(screen.getByPlaceholderText("Phone")).toHaveValue("0812");
-    expect(screen.getByPlaceholderText("Email")).toHaveValue(
-      "[email protected]",
-    );
-    expect(screen.getByPlaceholderText("Notes")).toHaveValue("Friend");
+    expect(screen.getByLabelText("Name")).toHaveValue("Budi");
+    expect(screen.getByLabelText("Phone")).toHaveValue("0812");
+    expect(screen.getByLabelText("Email")).toHaveValue("[email protected]");
+    expect(screen.getByLabelText("Notes")).toHaveValue("Friend");
 
     rerender(
       <ContactForm
@@ -38,10 +36,10 @@ describe("ContactForm", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText("Name")).toHaveValue("Siti");
-      expect(screen.getByPlaceholderText("Phone")).toHaveValue("0813");
-      expect(screen.getByPlaceholderText("Email")).toHaveValue("");
-      expect(screen.getByPlaceholderText("Notes")).toHaveValue("Colleague");
+      expect(screen.getByLabelText("Name")).toHaveValue("Siti");
+      expect(screen.getByLabelText("Phone")).toHaveValue("0813");
+      expect(screen.getByLabelText("Email")).toHaveValue("");
+      expect(screen.getByLabelText("Notes")).toHaveValue("Colleague");
     });
   });
 
@@ -56,15 +54,15 @@ describe("ContactForm", () => {
     expect(await screen.findByText("Name is required")).toBeInTheDocument();
     expect(await screen.findByText("Phone is required")).toBeInTheDocument();
 
-    await user.type(screen.getByPlaceholderText("Name"), "Budi");
-    await user.type(screen.getByPlaceholderText("Phone"), "0812");
-    await user.type(screen.getByPlaceholderText("Email"), "invalid-email");
+    await user.type(screen.getByLabelText("Name"), "Budi");
+    await user.type(screen.getByLabelText("Phone"), "0812");
+    await user.type(screen.getByLabelText("Email"), "invalid-email");
 
     await user.click(screen.getByRole("button", { name: "Save" }));
 
     expect(await screen.findByText("Invalid email")).toBeInTheDocument();
 
-    await user.clear(screen.getByPlaceholderText("Email"));
+    await user.clear(screen.getByLabelText("Email"));
     await user.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() => {

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { CreateContactUseCase } from "./create-contact.usecase";
-import { DeleteContactUseCase } from "./delete-contact.usecase";
-import { GetContactUseCase } from "./get-contact.usecase";
-import { UpdateContactUseCase } from "./update-contact.usecase";
+import { CreateContactUseCase } from "../create-contact.usecase";
+import { DeleteContactUseCase } from "../delete-contact.usecase";
+import { GetContactUseCase } from "../get-contact.usecase";
+import { UpdateContactUseCase } from "../update-contact.usecase";
 
 const createRepository = () => ({
   getContacts: vi.fn(),

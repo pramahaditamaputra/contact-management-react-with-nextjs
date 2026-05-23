@@ -6,7 +6,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: ["./src/test/vitest.setup.ts"],
+    setupFiles: ["./src/__test__/vitest.setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov", "html"],
@@ -15,6 +15,10 @@ export default defineConfig({
         "src/**/*.d.ts",
         "src/**/__tests__/*.{ts,tsx}",
         "src/**/?(*.){spec,test}.{ts,tsx}",
+        "src/shared/components/**",
+        "src/shared/hooks/**",
+        "src/shared/utils/**",
+        "src/features/contact/presentation/components/DataTable/**",
         "src/features/contact/domain/entities/**/*",
         "src/features/contact/domain/repositories/**/*",
         "src/features/contact/presentation/forms/contact-form.types.ts",

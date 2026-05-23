@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import ContactsPage from "./page";
-import ContactCreatePage from "./create/page";
-import ContactDetailPage from "./[id]/page";
-import ContactEditPage from "./edit/[id]/page";
+import ContactsPage from "../page";
+import ContactCreatePage from "../create/page";
+import ContactDetailPage from "../[id]/page";
+import ContactEditPage from "../edit/[id]/page";
 import { ContactListView } from "@/src/features/contact/presentation/views/ContactListView";
 import { ContactCreateView } from "@/src/features/contact/presentation/views/ContactCreateView";
 import { ContactDetailView } from "@/src/features/contact/presentation/views/ContactDetailView";

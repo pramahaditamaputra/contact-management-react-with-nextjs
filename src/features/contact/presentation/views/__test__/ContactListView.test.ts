@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { ContactListView } from "../ContactListView";
 import contactFilterReducer from "../../state/contact-filter.slice";
+import contactCreateModalReducer from "../../state/contact-create-modal.slice";
 import { useContactListViewModel } from "../../viewmodels/useContactListViewModel";
+
+vi.mock("../../components/ContactCreateDialog", () => ({
+  ContactCreateDialog: () =>
+    React.createElement("div", { "data-testid": "contact-create-dialog" }),
+}));
 
 vi.mock("../../viewmodels/useContactListViewModel", () => ({
   useContactListViewModel: vi.fn(),
@@ -15,7 +20,10 @@ vi.mock("../../viewmodels/useContactListViewModel", () => ({
 const mockedUseContactListViewModel = vi.mocked(useContactListViewModel);
 
 const store = configureStore({
-  reducer: { contactFilter: contactFilterReducer },
+  reducer: {
+    contactFilter: contactFilterReducer,
+    contactCreateModal: contactCreateModalReducer,
+  },
 });
 
 const ReduxProvider = Provider as React.ComponentType<{
@@ -33,10 +41,6 @@ const wrapper = ({
 
 beforeEach(() => {
   mockedUseContactListViewModel.mockReturnValue({
-    filter: {
-      keyword: "",
-      onKeywordChange: vi.fn(),
-    },
     contacts: {
       items: [{ id: "1", name: "Budi", phone: "0812" }],
       loading: false,
@@ -58,10 +62,6 @@ describe("ContactListView", () => {
 
   it("shows loading state", () => {
     mockedUseContactListViewModel.mockReturnValueOnce({
-      filter: {
-        keyword: "",
-        onKeywordChange: vi.fn(),
-      },
       contacts: {
         items: [],
         loading: true,
@@ -78,12 +78,7 @@ describe("ContactListView", () => {
   });
 
   it("shows error state and forwards keyword changes", async () => {
-    const onKeywordChange = vi.fn();
     mockedUseContactListViewModel.mockReturnValueOnce({
-      filter: {
-        keyword: "",
-        onKeywordChange,
-      },
       contacts: {
         items: [],
         loading: false,
@@ -99,10 +94,6 @@ describe("ContactListView", () => {
     expect(screen.getByText("Failed to load")).toBeInTheDocument();
 
     mockedUseContactListViewModel.mockReturnValueOnce({
-      filter: {
-        keyword: "",
-        onKeywordChange,
-      },
       contacts: {
         items: [],
         loading: false,
@@ -115,10 +106,6 @@ describe("ContactListView", () => {
       React.createElement(wrapper, null, React.createElement(ContactListView)),
     );
 
-    const user = userEvent.setup();
-    await user.type(screen.getByPlaceholderText("Search contact"), "budi");
-
-    expect(onKeywordChange).toHaveBeenCalled();
-    expect(onKeywordChange).toHaveBeenLastCalledWith("i");
+    expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
   });
 });

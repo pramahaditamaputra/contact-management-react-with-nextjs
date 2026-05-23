@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from "vitest";
-import { contactApi } from "./contact.api";
+import { contactApi } from "../contact.api";
 import { apiClient } from "@/src/shared/api/axios";
 
 vi.mock("@/src/shared/api/axios", () => ({
@@ -23,7 +23,7 @@ describe("contactApi", () => {
 
     await contactApi.getContacts("budi");
 
-    expect(apiClient.get).toHaveBeenCalledWith("/contact", {
+    expect(apiClient.get).toHaveBeenCalledWith("/users", {
       params: { keyword: "budi" },
     });
   });
@@ -35,7 +35,7 @@ describe("contactApi", () => {
 
     await contactApi.getContacts();
 
-    expect(apiClient.get).toHaveBeenCalledWith("/contact", {
+    expect(apiClient.get).toHaveBeenCalledWith("/users", {
       params: undefined,
     });
   });
@@ -47,7 +47,7 @@ describe("contactApi", () => {
 
     await contactApi.getContact("1");
 
-    expect(apiClient.get).toHaveBeenCalledWith("/contact/1");
+    expect(apiClient.get).toHaveBeenCalledWith("/users/1");
   });
 
   it("creates a contact", async () => {
@@ -61,7 +61,7 @@ describe("contactApi", () => {
       email: "[email protected]",
     });
 
-    expect(apiClient.post).toHaveBeenCalledWith("/contact", {
+    expect(apiClient.post).toHaveBeenCalledWith("/users", {
       name: "Budi",
       phone: "0812",
       email: "[email protected]",
@@ -75,7 +75,7 @@ describe("contactApi", () => {
 
     await contactApi.updateContact("1", { name: "Budi Updated" });
 
-    expect(apiClient.put).toHaveBeenCalledWith("/contact/1", {
+    expect(apiClient.put).toHaveBeenCalledWith("/users/1", {
       name: "Budi Updated",
     });
   });
@@ -85,6 +85,6 @@ describe("contactApi", () => {
 
     await contactApi.deleteContact("1");
 
-    expect(apiClient.delete).toHaveBeenCalledWith("/contact/1");
+    expect(apiClient.delete).toHaveBeenCalledWith("/users/1");
   });
 });

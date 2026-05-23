@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import reducer, { setKeyword, resetKeyword } from "./contact-filter.slice";
+import reducer, { setKeyword, resetKeyword } from "../contact-filter.slice";
 
 describe("contactFilterSlice", () => {
   it("sets keyword", () => {

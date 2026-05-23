@@ -11,9 +11,9 @@ import {
 import { Button } from "@/src/shared/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { MoreVerticalCircle01Icon } from "@hugeicons/core-free-icons";
-import { DataTableColumnHeader } from "./DataTableColumnHeader";
+import { DataTableColumnHeader } from "@/src/shared/components/data-table/data-table-column-header";
 
-export const columns: ColumnDef<Contact>[] = [
+export const columns: ColumnDef<Contact, unknown>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -33,6 +33,7 @@ export const columns: ColumnDef<Contact>[] = [
         </div>
       );
     },
+    size: 0,
     enableHiding: true,
   },
   {
@@ -41,6 +42,7 @@ export const columns: ColumnDef<Contact>[] = [
     cell: ({ row }) => {
       return <p>{row.original.phone}</p>;
     },
+    size: 0,
     enableHiding: true,
   },
   {
@@ -49,10 +51,12 @@ export const columns: ColumnDef<Contact>[] = [
     cell: ({ row }) => {
       return <p>{row.original.email}</p>;
     },
+    size: 0,
     enableHiding: true,
   },
   {
     id: "actions",
+    size: 0,
     cell: () => {
       return (
         <DropdownMenu>

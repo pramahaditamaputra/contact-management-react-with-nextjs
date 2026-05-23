@@ -1,8 +1,8 @@
 import { describe, expect, it, beforeEach, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
-import { useContactCreateViewModel } from "./useContactCreateViewModel";
-import { useContactDetailViewModel } from "./useContactDetailViewModel";
-import { useContactEditViewModel } from "./useContactEditViewModel";
+import { useContactCreateViewModel } from "../useContactCreateViewModel";
+import { useContactDetailViewModel } from "../useContactDetailViewModel";
+import { useContactEditViewModel } from "../useContactEditViewModel";
 
 const push = vi.fn();
 

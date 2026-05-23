@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { contactDtoToEntity } from "./contact.mapper";
+import { contactDtoToEntity } from "../contact.mapper";
 
 describe("contactDtoToEntity", () => {
   it("maps dto to entity", () => {

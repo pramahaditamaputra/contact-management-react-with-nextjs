@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import Home from "./page";
+import Home from "../page";
 import { redirect } from "next/navigation";
 
 vi.mock("next/navigation", () => ({

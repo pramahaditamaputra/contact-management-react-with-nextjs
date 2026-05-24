@@ -14,6 +14,8 @@
 ![Coverage](https://img.shields.io/badge/coverage-97.57%25-brightgreen)
 ![CI](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/actions/workflows/ci.yml/badge.svg)
 
+[Live Demo](https://contact-management-react-with-nextj.vercel.app/contacts)
+
 A modern Contact CRUD application built with Next.js + React 19, TypeScript, Redux Toolkit and TanStack Query following a feature-based clean architecture.
 
 ## Tech Stack

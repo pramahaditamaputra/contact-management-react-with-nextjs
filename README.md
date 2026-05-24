@@ -86,8 +86,30 @@ src/
 ├── providers/     # App providers (Redux, QueryClient)
 ├── store/         # Redux store + hooks
 ├── shared/        # Shared UI, api client, utilities
-└── features/      # Feature modules (contact)
+└── features/
+	└── contact/
+		├── data/          # Data sources, mappers, repository implementation
+		│   ├── api/
+		│   ├── mappers/
+		│   └── repositories/
+		├── domain/        # Entities, repository contracts, use cases
+		│   ├── entities/
+		│   ├── repositories/
+		│   └── usecases/
+		└── presentation/  # UI components, views, state, queries, viewmodels
+			├── components/
+			├── forms/
+			├── queries/
+			├── state/
+			├── viewmodels/
+			└── views/
 ```
+
+## Architecture Diagram
+
+[View Full Diagram](https://drive.google.com/file/d/1ZDjshRsDEX_M5En0DOM41eeZm5PTrCBb/view)
+
+![Clean Architecture Diagram](https://drive.google.com/uc?export=view&id=1ZDjshRsDEX_M5En0DOM41eeZm5PTrCBb)
 
 ## Testing
 

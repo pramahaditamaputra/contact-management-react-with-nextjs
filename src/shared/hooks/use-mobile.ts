@@ -1,22 +1,23 @@
 import * as React from "react";
 
 const MOBILE_BREAKPOINT = 768;
+const MOBILE_QUERY = `(max-width: ${MOBILE_BREAKPOINT - 1}px)`;
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(() =>
-    typeof window === "undefined"
-      ? undefined
-      : window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches,
-  );
+  // Keep the first render deterministic across server and client.
+  const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const mql = window.matchMedia(MOBILE_QUERY);
     const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+      setIsMobile(mql.matches);
     };
+
+    // Sync once after mount, then listen for viewport changes.
+    onChange();
     mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
   }, []);
 
-  return !!isMobile;
+  return isMobile;
 }

@@ -1,4 +1,4 @@
-# Contact CRUD App
+# Contact Management Web App for Technical Test
 
 ![Node](https://img.shields.io/badge/Node.js-24%20LTS-339933?logo=nodedotjs&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-16.2.6-000000?logo=next.js)
@@ -16,9 +16,7 @@
 
 [Live Demo](https://contact-management-react-with-nextj.vercel.app/contacts)
 
-Coverage is published to Codecov from GitHub Actions after the test suite runs.
-
-A modern Contact CRUD application built with Next.js + React 19, TypeScript, Redux Toolkit and TanStack Query following a feature-based clean architecture.
+A modern Contact Management web application built with Next.js + React 19, TypeScript, Redux Toolkit and TanStack Query, React Hook Form, Zod, Tailwind CSS, Shadcn UI, Vitest following a feature-based clean architecture.
 
 ## Tech Stack
 
@@ -27,7 +25,7 @@ A modern Contact CRUD application built with Next.js + React 19, TypeScript, Red
 - State Management: Redux Toolkit
 - Server State: TanStack Query
 - Forms: React Hook Form + Zod
-- Styling: Tailwind CSS (configured)
+- Styling: Tailwind CSS 4 + Shadcn UI
 - Testing: Vitest + Testing Library
 
 ## Getting Started
@@ -46,7 +44,7 @@ npm install
 Environment variables (create `.env`):
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com
+NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com/contact
 ```
 
 Run development server:
@@ -72,7 +70,7 @@ npm run coverage   # run tests with coverage
 
 This app expects a contacts API. Default base URL used in development:
 
-- `NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com`
+- `NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com/contact`
 
 ## Project Structure (high level)
 

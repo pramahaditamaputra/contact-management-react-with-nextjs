@@ -14,6 +14,6 @@ describe("GetContactsUseCase", () => {
     const useCase = new GetContactsUseCase(repository);
     await useCase.execute("budi");
 
-    expect(repository.getContacts).toHaveBeenCalledWith("budi");
+    expect(repository.getContacts).toHaveBeenCalledWith("budi", 0, 5);
   });
 });

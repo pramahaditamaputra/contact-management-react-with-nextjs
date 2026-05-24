@@ -1,5 +1,6 @@
 import { apiClient } from "@/src/shared/api/axios";
 import { endpoints } from "@/src/shared/api/endpoints";
+import { upsertContactPayloadToUserFields } from "../mappers/contact.mapper";
 
 export type ContactResponseDto = {
   users: UserResponseDto[];
@@ -25,17 +26,6 @@ export type UpsertContactPayloadDto = {
   email?: string;
   image?: string;
   notes?: string;
-};
-
-const splitFullName = (name: string) => {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  const firstName = parts.shift() ?? "";
-  const lastName = parts.join(" ");
-
-  return {
-    firstName,
-    lastName,
-  };
 };
 
 export const contactApi = {
@@ -69,23 +59,16 @@ export const contactApi = {
   },
 
   async createContact(payload: UpsertContactPayloadDto) {
-    const { firstName, lastName } = splitFullName(payload.name);
-
     const res = await apiClient.post<UserResponseDto>(endpoints.contactAdd, {
-      firstName,
-      lastName,
-      phone: payload.phone,
-      email: payload.email,
-      image: payload.image,
-      notes: payload.notes,
+      ...upsertContactPayloadToUserFields(payload),
     });
     return res.data;
   },
 
   async updateContact(id: string, payload: Partial<UpsertContactPayloadDto>) {
-    const res = await apiClient.put<UserResponseDto>(
+    const res = await apiClient.patch<UserResponseDto>(
       endpoints.contactById(id),
-      payload,
+      upsertContactPayloadToUserFields(payload),
     );
     return res.data;
   },

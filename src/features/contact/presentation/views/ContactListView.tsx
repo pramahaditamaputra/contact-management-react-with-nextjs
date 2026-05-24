@@ -57,15 +57,14 @@ export const ContactListView = () => {
         onSubmit={createDialog.onSubmit}
       />
       <ContactEditSheet
-        contact={editSheet.contact}
+        contactId={editSheet.contactId}
         isOpen={editSheet.isOpen}
-        initialValues={editSheet.initialValues}
         loading={editSheet.loading}
         onOpenChange={editSheet.onOpenChange}
         onSubmit={editSheet.onSubmit}
       />
       <ContactDeleteDialog
-        contact={deleteDialog.contact}
+        contactId={deleteDialog.contactId}
         open={deleteDialog.open}
         loading={deleteDialog.loading}
         onOpenChange={deleteDialog.onOpenChange}

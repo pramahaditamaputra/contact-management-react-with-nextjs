@@ -1,28 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Contact } from "../../domain/entities/contact";
-
 type State = {
   isOpen: boolean;
-  contact: Contact | null;
+  contactId: string | null;
 };
 
 const initialState: State = {
   isOpen: false,
-  contact: null,
+  contactId: null,
 };
 
 const contactEditModalSlice = createSlice({
   name: "contactEditModal",
   initialState,
   reducers: {
-    openContactEditModal(state: State, action: PayloadAction<Contact>) {
+    openContactEditModal(state: State, action: PayloadAction<string>) {
       state.isOpen = true;
-      state.contact = action.payload;
+      state.contactId = action.payload;
     },
     closeContactEditModal(state: State) {
       state.isOpen = false;
-      state.contact = null;
+      state.contactId = null;
     },
   },
 });

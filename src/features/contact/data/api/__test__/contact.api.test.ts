@@ -6,6 +6,7 @@ vi.mock("@/src/shared/api/axios", () => ({
   apiClient: {
     get: vi.fn(),
     post: vi.fn(),
+    patch: vi.fn(),
     put: vi.fn(),
     delete: vi.fn(),
   },
@@ -82,14 +83,15 @@ describe("contactApi", () => {
   });
 
   it("updates a contact", async () => {
-    vi.mocked(apiClient.put).mockResolvedValueOnce({
-      data: { id: "1", name: "Budi Updated", phone: "0812" },
+    vi.mocked(apiClient.patch).mockResolvedValueOnce({
+      data: { id: "1", firstName: "Budi", lastName: "Updated", phone: "0812" },
     } as never);
 
     await contactApi.updateContact("1", { name: "Budi Updated" });
 
-    expect(apiClient.put).toHaveBeenCalledWith("/users/1", {
-      name: "Budi Updated",
+    expect(apiClient.patch).toHaveBeenCalledWith("/users/1", {
+      firstName: "Budi",
+      lastName: "Updated",
     });
   });
 

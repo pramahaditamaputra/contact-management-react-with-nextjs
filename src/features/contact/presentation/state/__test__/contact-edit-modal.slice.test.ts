@@ -6,25 +6,14 @@ import reducer, {
 
 describe("contactEditModalSlice", () => {
   it("opens with the selected contact and closes cleanly", () => {
-    const opened = reducer(
-      undefined,
-      openContactEditModal({
-        id: "1",
-        name: "Budi",
-        phone: "0812",
-      }),
-    );
+    const opened = reducer(undefined, openContactEditModal("1"));
 
     expect(opened).toEqual({
       isOpen: true,
-      contact: {
-        id: "1",
-        name: "Budi",
-        phone: "0812",
-      },
+      contactId: "1",
     });
 
     const closed = reducer(opened, closeContactEditModal());
-    expect(closed).toEqual({ isOpen: false, contact: null });
+    expect(closed).toEqual({ isOpen: false, contactId: null });
   });
 });

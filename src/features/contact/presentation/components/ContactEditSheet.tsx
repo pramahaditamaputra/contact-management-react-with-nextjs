@@ -8,27 +8,38 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/src/shared/components/ui/sheet";
-import { Contact } from "../../domain/entities/contact";
+import { Skeleton } from "@/src/shared/components/ui/skeleton";
+import { useContactQuery } from "../queries/useContactQuery";
 import { ContactFormValues } from "../forms/contact-form.types";
 
 type ContactEditSheetProps = {
-  contact: Contact | null;
+  contactId: string | null;
   isOpen: boolean;
-  initialValues: ContactFormValues | null;
   loading: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: ContactFormValues) => Promise<void>;
 };
 
 export const ContactEditSheet = ({
-  contact,
+  contactId,
   isOpen,
-  initialValues,
   loading,
   onOpenChange,
   onSubmit,
 }: ContactEditSheetProps) => {
-  if (!contact || !initialValues) return null;
+  const { data: contact, isLoading, error } = useContactQuery(contactId ?? "");
+
+  if (!contactId) return null;
+
+  const initialValues = contact
+    ? {
+        name: contact.name,
+        phone: contact.phone,
+        email: contact.email,
+        image: contact.image,
+        notes: contact.notes,
+      }
+    : null;
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -43,12 +54,45 @@ export const ContactEditSheet = ({
           </SheetHeader>
 
           <div className="flex-1 overflow-y-auto px-6 py-6">
-            <ContactForm
-              initialValues={initialValues}
-              onSubmit={onSubmit}
-              loading={loading}
-              submitLabel="Update contact"
-            />
+            {error ? (
+              <p className="text-sm text-destructive">
+                Failed to load the latest contact details.
+              </p>
+            ) : isLoading || !initialValues ? (
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-10 w-full rounded-xl" />
+                </div>
+                <div className="grid gap-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-10 w-full rounded-xl" />
+                </div>
+                <div className="grid gap-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-10 w-full rounded-xl" />
+                </div>
+                <div className="grid gap-3">
+                  <div className="grid gap-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-10 w-full rounded-xl" />
+                  </div>
+                  <Skeleton className="h-20 w-full rounded-2xl" />
+                </div>
+                <div className="grid gap-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-24 w-full rounded-xl" />
+                </div>
+                <Skeleton className="h-11 w-full rounded-xl" />
+              </div>
+            ) : (
+              <ContactForm
+                initialValues={initialValues}
+                onSubmit={onSubmit}
+                loading={loading}
+                submitLabel="Update contact"
+              />
+            )}
           </div>
         </div>
       </SheetContent>

@@ -174,13 +174,7 @@ describe("useContactListViewModel", () => {
     });
 
     expect(result.current.editSheet.isOpen).toBe(true);
-    expect(result.current.editSheet.initialValues).toEqual({
-      name: "Budi",
-      phone: "0812",
-      email: undefined,
-      image: undefined,
-      notes: undefined,
-    });
+    expect(result.current.editSheet.contactId).toBe("1");
 
     await act(async () => {
       await result.current.editSheet.onSubmit({
@@ -203,7 +197,7 @@ describe("useContactListViewModel", () => {
       },
     });
     expect(result.current.editSheet.isOpen).toBe(false);
-    expect(result.current.editSheet.contact).toBeNull();
+    expect(result.current.editSheet.contactId).toBeNull();
     expect(vi.mocked(useUpdateContactMutation)).toHaveBeenCalled();
   });
 
@@ -219,11 +213,7 @@ describe("useContactListViewModel", () => {
     });
 
     expect(result.current.deleteDialog.open).toBe(true);
-    expect(result.current.deleteDialog.contact).toEqual({
-      id: "1",
-      name: "Budi",
-      phone: "0812",
-    });
+    expect(result.current.deleteDialog.contactId).toBe("1");
 
     await act(async () => {
       await result.current.deleteDialog.onConfirm();
@@ -231,7 +221,7 @@ describe("useContactListViewModel", () => {
 
     expect(deleteMutateAsync).toHaveBeenCalledWith("1");
     expect(result.current.deleteDialog.open).toBe(false);
-    expect(result.current.deleteDialog.contact).toBeNull();
+    expect(result.current.deleteDialog.contactId).toBeNull();
     expect(vi.mocked(useDeleteContactMutation)).toHaveBeenCalled();
   });
 });

@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("../../queries/useContactQuery", () => ({
+  useContactQuery: vi.fn(),
+}));
+
 vi.mock("@/src/shared/components/ui/sheet", () => ({
   Sheet: ({
     children,
@@ -34,6 +38,7 @@ vi.mock("@/src/shared/components/ui/sheet", () => ({
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ContactEditSheet } from "../ContactEditSheet";
+import { useContactQuery } from "../../queries/useContactQuery";
 
 describe("ContactEditSheet", () => {
   it("shows the selected contact and submits updates", async () => {
@@ -41,24 +46,25 @@ describe("ContactEditSheet", () => {
     const onOpenChange = vi.fn();
     const onSubmit = vi.fn().mockResolvedValue(undefined);
 
+    vi.mocked(useContactQuery).mockReturnValue({
+      data: {
+        id: "1",
+        name: "Budi Fresh",
+        phone: "0812-9999",
+        email: "fresh@example.com",
+        image: "https://example.com/fresh.png",
+        notes: "Loaded from detail API",
+      },
+      isLoading: false,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
     render(
       <ContactEditSheet
-        contact={{
-          id: "1",
-          name: "Budi",
-          phone: "0812",
-          email: "budi@example.com",
-          image: "https://example.com/avatar.png",
-          notes: "Friend",
-        }}
+        contactId="1"
         isOpen
-        initialValues={{
-          name: "Budi",
-          phone: "0812",
-          email: "budi@example.com",
-          image: "https://example.com/avatar.png",
-          notes: "Friend",
-        }}
         loading={false}
         onOpenChange={onOpenChange}
         onSubmit={onSubmit}
@@ -66,7 +72,7 @@ describe("ContactEditSheet", () => {
     );
 
     expect(screen.getByText("Edit Contact")).toBeInTheDocument();
-    expect(screen.getByLabelText("Name")).toHaveValue("Budi");
+    expect(screen.getByLabelText("Name")).toHaveValue("Budi Fresh");
 
     await user.clear(screen.getByLabelText("Name"));
     await user.type(screen.getByLabelText("Name"), "Budi Updated");
@@ -74,10 +80,10 @@ describe("ContactEditSheet", () => {
 
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({
       name: "Budi Updated",
-      phone: "0812",
-      email: "budi@example.com",
-      image: "https://example.com/avatar.png",
-      notes: "Friend",
+      phone: "0812-9999",
+      email: "fresh@example.com",
+      image: "https://example.com/fresh.png",
+      notes: "Loaded from detail API",
     });
   });
 
@@ -85,21 +91,18 @@ describe("ContactEditSheet", () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
 
+    vi.mocked(useContactQuery).mockReturnValue({
+      data: null,
+      isLoading: true,
+      isFetching: true,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
     render(
       <ContactEditSheet
-        contact={{
-          id: "1",
-          name: "Budi",
-          phone: "0812",
-        }}
+        contactId="1"
         isOpen
-        initialValues={{
-          name: "Budi",
-          phone: "0812",
-          email: undefined,
-          image: undefined,
-          notes: undefined,
-        }}
         loading={false}
         onOpenChange={onOpenChange}
         onSubmit={vi.fn().mockResolvedValue(undefined)}

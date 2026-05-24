@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { contactDtoToEntity, contactsDtoToEntity } from "../contact.mapper";
+import {
+  contactDtoToEntity,
+  contactsDtoToEntity,
+  upsertContactPayloadToUserFields,
+} from "../contact.mapper";
 
 describe("contactDtoToEntity", () => {
   it("maps dto to entity", () => {
@@ -64,6 +68,25 @@ describe("contactDtoToEntity", () => {
       phone: "N/A",
       email: "[email protected]",
       image: "https://example.com/avatar-2.png",
+    });
+  });
+
+  it("maps upsert payloads to DummyJSON user fields", () => {
+    expect(
+      upsertContactPayloadToUserFields({
+        name: "Budi Santoso",
+        phone: "0812",
+        email: "budi@example.com",
+        image: "https://example.com/avatar.png",
+        notes: "Friend",
+      }),
+    ).toEqual({
+      firstName: "Budi",
+      lastName: "Santoso",
+      phone: "0812",
+      email: "budi@example.com",
+      image: "https://example.com/avatar.png",
+      notes: "Friend",
     });
   });
 });

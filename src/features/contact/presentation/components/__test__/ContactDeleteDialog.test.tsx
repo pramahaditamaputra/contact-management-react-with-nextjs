@@ -1,6 +1,10 @@
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("../../queries/useContactQuery", () => ({
+  useContactQuery: vi.fn(),
+}));
+
 const dialogOnOpenChange = vi.fn();
 
 vi.mock("@/src/shared/components/ui/dialog", () => ({
@@ -41,15 +45,28 @@ vi.mock("@/src/shared/components/ui/dialog", () => ({
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ContactDeleteDialog } from "../ContactDeleteDialog";
+import { useContactQuery } from "../../queries/useContactQuery";
 
 describe("ContactDeleteDialog", () => {
   it("shows the contact details and confirms deletion", async () => {
     const user = userEvent.setup();
     const onConfirm = vi.fn();
 
+    vi.mocked(useContactQuery).mockReturnValue({
+      data: {
+        id: "1",
+        name: "Budi",
+        phone: "0812",
+      },
+      isLoading: false,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
     render(
       <ContactDeleteDialog
-        contact={{ id: "1", name: "Budi", phone: "0812" }}
+        contactId="1"
         open
         loading={false}
         onOpenChange={dialogOnOpenChange}
@@ -68,9 +85,21 @@ describe("ContactDeleteDialog", () => {
   it("closes the dialog when cancel is clicked", async () => {
     const user = userEvent.setup();
 
+    vi.mocked(useContactQuery).mockReturnValue({
+      data: {
+        id: "1",
+        name: "Budi",
+        phone: "0812",
+      },
+      isLoading: false,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
     render(
       <ContactDeleteDialog
-        contact={{ id: "1", name: "Budi", phone: "0812" }}
+        contactId="1"
         open
         loading={false}
         onOpenChange={dialogOnOpenChange}

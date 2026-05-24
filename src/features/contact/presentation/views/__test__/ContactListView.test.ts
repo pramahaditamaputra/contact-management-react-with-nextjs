@@ -17,16 +17,16 @@ vi.mock("../../components/ContactEditSheet", () => ({
 
 vi.mock("../../components/ContactDeleteDialog", () => ({
   ContactDeleteDialog: ({
-    contact,
+    contactId,
     open,
   }: {
-    contact: { name: string } | null;
+    contactId: string | null;
     open: boolean;
   }) =>
     React.createElement("div", {
       "data-testid": "contact-delete-dialog",
       "data-open": String(open),
-      "data-contact": contact?.name ?? "",
+      "data-contact-id": contactId ?? "",
     }),
 }));
 
@@ -70,16 +70,15 @@ beforeEach(() => {
       onSubmit: vi.fn(),
     },
     editSheet: {
-      contact: null,
+      contactId: null,
       isOpen: false,
-      initialValues: null,
       loading: false,
       error: null,
       onOpenChange: vi.fn(),
       onSubmit: vi.fn(),
     },
     deleteDialog: {
-      contact: null,
+      contactId: null,
       open: false,
       loading: false,
       onOpenChange: vi.fn(),
@@ -165,16 +164,15 @@ describe("ContactListView", () => {
         onSubmit: vi.fn(),
       },
       editSheet: {
-        contact: null,
+        contactId: null,
         isOpen: false,
-        initialValues: null,
         loading: false,
         error: null,
         onOpenChange: vi.fn(),
         onSubmit: vi.fn(),
       },
       deleteDialog: {
-        contact: null,
+        contactId: null,
         open: false,
         loading: false,
         onOpenChange: vi.fn(),
@@ -220,16 +218,15 @@ describe("ContactListView", () => {
         onSubmit: vi.fn(),
       },
       editSheet: {
-        contact: null,
+        contactId: null,
         isOpen: false,
-        initialValues: null,
         loading: false,
         error: null,
         onOpenChange: vi.fn(),
         onSubmit: vi.fn(),
       },
       deleteDialog: {
-        contact: null,
+        contactId: null,
         open: false,
         loading: false,
         onOpenChange: vi.fn(),

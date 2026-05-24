@@ -74,14 +74,6 @@ This app expects a contacts API. Default base URL used in development:
 
 - `NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com`
 
-Main endpoints used:
-
-- `GET /contact`
-- `GET /contact/:id`
-- `POST /contact`
-- `PUT /contact/:id`
-- `DELETE /contact/:id`
-
 ## Project Structure (high level)
 
 ```

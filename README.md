@@ -1,6 +1,6 @@
 # Contact CRUD App
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+[![Release](https://img.shields.io/github/v/release/pramahaditamaputra/contact-management-react-with-nextjs)](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/releases/tag/v0.1.0)
 ![Node](https://img.shields.io/badge/node-%3E%3D_18-brightgreen)
 ![Next.js](https://img.shields.io/badge/Next.js-16.2.6-000000?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)

@@ -11,6 +11,10 @@ import {
   closeContactEditModal,
   openContactEditModal,
 } from "../state/contact-edit-modal.slice";
+import {
+  closeContactDeleteModal,
+  openContactDeleteModal,
+} from "../state/contact-delete-modal.slice";
 import { Contact } from "../../domain/entities/contact";
 import { useCreateContactMutation } from "../queries/useCreateContactMutation";
 import { useUpdateContactMutation } from "../queries/useUpdateContactMutation";
@@ -25,6 +29,12 @@ export const useContactListViewModel = () => {
   );
   const editContact = useAppSelector((state) => state.contactEditModal.contact);
   const editIsOpen = useAppSelector((state) => state.contactEditModal.isOpen);
+  const deleteContact = useAppSelector(
+    (state) => state.contactDeleteModal.contact,
+  );
+  const deleteIsOpen = useAppSelector(
+    (state) => state.contactDeleteModal.isOpen,
+  );
   const createMutation = useCreateContactMutation();
   const updateMutation = useUpdateContactMutation();
   const deleteMutation = useDeleteContactMutation();
@@ -32,10 +42,6 @@ export const useContactListViewModel = () => {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [contactToDelete, setContactToDelete] = React.useState<Contact | null>(
-    null,
-  );
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const contactsQuery = useContactsQuery(
     keyword,
     pagination.pageIndex,
@@ -95,24 +101,20 @@ export const useContactListViewModel = () => {
     : null;
 
   const onDeleteContactRequest = (contact: Contact) => {
-    setContactToDelete(contact);
-    setIsDeleteDialogOpen(true);
+    dispatch(openContactDeleteModal(contact));
   };
 
   const onDeleteContactDialogOpenChange = (nextOpen: boolean) => {
-    setIsDeleteDialogOpen(nextOpen);
-
     if (!nextOpen) {
-      setContactToDelete(null);
+      dispatch(closeContactDeleteModal());
     }
   };
 
   const onDeleteContactConfirm = async () => {
-    if (!contactToDelete) return;
+    if (!deleteContact) return;
 
-    await deleteMutation.mutateAsync(contactToDelete.id);
-    setIsDeleteDialogOpen(false);
-    setContactToDelete(null);
+    await deleteMutation.mutateAsync(deleteContact.id);
+    dispatch(closeContactDeleteModal());
   };
 
   return {
@@ -149,8 +151,8 @@ export const useContactListViewModel = () => {
       onSubmit: onEditContactSubmit,
     },
     deleteDialog: {
-      contact: contactToDelete,
-      open: isDeleteDialogOpen,
+      contact: deleteContact,
+      open: deleteIsOpen,
       loading: deleteMutation.isPending,
       onOpenChange: onDeleteContactDialogOpenChange,
       onConfirm: onDeleteContactConfirm,

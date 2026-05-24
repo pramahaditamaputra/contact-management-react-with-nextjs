@@ -7,6 +7,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import contactFilterSlice from "../../state/contact-filter.slice";
 import contactCreateModalReducer from "../../state/contact-create-modal.slice";
 import contactEditModalReducer from "../../state/contact-edit-modal.slice";
+import contactDeleteModalReducer from "../../state/contact-delete-modal.slice";
 
 vi.mock("../../queries/useContactsQuery", () => ({
   useContactsQuery: vi.fn(() => ({
@@ -62,6 +63,7 @@ const store = configureStore({
     contactFilter: contactFilterSlice,
     contactCreateModal: contactCreateModalReducer,
     contactEditModal: contactEditModalReducer,
+    contactDeleteModal: contactDeleteModalReducer,
   },
 });
 

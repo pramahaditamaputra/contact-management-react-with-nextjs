@@ -11,10 +11,12 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.x-06B6D4?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/tests-vitest-ff69b4)
 ![Testing Library](https://img.shields.io/badge/Testing%20Library-14.x-E33332?logo=testinglibrary&logoColor=white)
-![Coverage](https://img.shields.io/badge/coverage-97.57%25-brightgreen)
-![CI](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://codecov.io/gh/pramahaditamaputra/contact-management-react-with-nextjs/branch/main/graph/badge.svg)
+![CI](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/actions/workflows/ci.yml/badge.svg?branch=main)
 
 [Live Demo](https://contact-management-react-with-nextj.vercel.app/contacts)
+
+Coverage is published to Codecov from GitHub Actions after the test suite runs.
 
 A modern Contact CRUD application built with Next.js + React 19, TypeScript, Redux Toolkit and TanStack Query following a feature-based clean architecture.
 

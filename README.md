@@ -108,6 +108,3 @@ npm run coverage
 - Redux handles local/UI state (search/filter), while TanStack Query handles server state and caching.
 
 ---
-
-If you'd like, I can also add a GitHub Actions workflow and CI status badge, or update the badges to point to your repository. Want me to do that next?
-CI badge points to `pramahaditamaputra/contact-management-react-with-nextjs`.

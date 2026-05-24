@@ -1,225 +1,113 @@
 # Contact CRUD App
 
-A modern Contact CRUD application built with **Next.js**, **TypeScript**, **Redux Toolkit**, and **TanStack Query** using a **feature-based clean architecture** approach.
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D_18-brightgreen)
+![Next.js](https://img.shields.io/badge/Next.js-16.2.6-000000?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
+![Vitest](https://img.shields.io/badge/tests-vitest-ff69b4)
+![CI](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/actions/workflows/ci.yml/badge.svg)
 
-This project was created as a frontend coding test submission with a focus on:
-- clean and scalable architecture,
-- strong UI/UX,
-- reusable feature structure,
-- unit-testable logic,
-- maintainable data flow.
+A modern Contact CRUD application built with Next.js, TypeScript, Redux Toolkit and TanStack Query following a feature-based clean architecture.
+
+Key points:
+- Next.js 16 + React 19
+- TypeScript 5
+- Redux Toolkit for UI state
+- TanStack Query for server state
+
+## Quick status
+
+- Project version: `0.1.0`
+- Private package (not published to npm)
 
 ## Tech Stack
 
-- **Framework:** Next.js
-- **Language:** TypeScript
-- **State Management:** Redux Toolkit
-- **Server State:** TanStack Query
-- **Forms:** React Hook Form + Zod
-- **Styling:** Tailwind CSS / your preferred styling solution
-- **Testing:** Vitest / Jest + React Testing Library
-- **Architecture:** Feature-based Clean Architecture + ViewModel
-
-## Features
-
-- Contact list
-- Contact detail
-- Create contact
-- Edit contact
-- Delete contact
-- Search / filter contacts
-- Responsive UI
-- Loading / empty / error states
-- Unit tests for core logic
-
-## Architecture Overview
-
-The project follows a feature-based structure:
-
-```txt
-src/
-├── app/
-├── providers/
-├── store/
-├── shared/
-├── features/
-│   └── contact/
-│       ├── domain/
-│       ├── data/
-│       └── presentation/
-└── tests/
-```
-
-### Layer responsibilities
-
-- `app/`: Next.js route entry points.
-- `providers/`: App-wide providers such as Redux and QueryClient.
-- `store/`: Root Redux store setup and typed hooks.
-- `shared/`: Shared utilities, API client, UI components, and constants.
-- `features/contact/domain/`: Entities, repository contracts, and use cases.
-- `features/contact/data/`: API calls, mappers, and repository implementations.
-- `features/contact/presentation/`: Views, ViewModels, query hooks, forms, components, and local UI state.
-- `tests/`: Unit and integration tests.
-
-## Data Flow
-
-The flow is designed to keep UI, state, and data access separated:
-
-```txt
-View
-→ ViewModel
-→ TanStack Query hook
-→ Use Case
-→ Repository
-→ API
-→ Mapper
-→ Entity
-```
-
-For UI state such as search/filter keyword, Redux is used as the source of truth.
+- Framework: Next.js 16
+- Language: TypeScript 5
+- State Management: Redux Toolkit
+- Server State: TanStack Query
+- Forms: React Hook Form + Zod
+- Styling: Tailwind CSS (configured)
+- Testing: Vitest + Testing Library
 
 ## Getting Started
 
-### Prerequisites
+Prerequisites:
 
 - Node.js 18+
 - npm / yarn / pnpm
 
-### Installation
+Install dependencies:
 
 ```bash
-git clone https://github.com/your-username/contact-crud-app.git
-cd contact-crud-app
 npm install
 ```
 
-### Environment Variables
-
-Create a `.env.local` file:
+Environment variables (create `.env.local`):
 
 ```bash
 NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com
 ```
 
-### Run Development Server
+Run development server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open http://localhost:3000
 
-## Scripts
+## Available Scripts
 
 ```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npm run test
-npm run test:watch
+npm run dev        # start dev server
+npm run build      # build for production
+npm run start      # start production server
+npm run lint       # run eslint
+npm run test       # run vitest (watch mode depends on your config)
+npm run coverage   # run tests with coverage
 ```
 
-## API Integration
+## API
 
-This app uses the provided Contact API for CRUD operations.
+This app expects a contacts API. Default base URL used in development:
 
-Base URL:
-- `https://contact.herokuapp.com`
+- `NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com`
 
 Main endpoints used:
+
 - `GET /contact`
 - `GET /contact/:id`
 - `POST /contact`
 - `PUT /contact/:id`
 - `DELETE /contact/:id`
 
-> The app is designed to adapt to the API response structure through mapper functions in the data layer.
+## Project Structure (high level)
 
-## UI State vs Server State
-
-- **Redux Toolkit** is used for UI state such as search/filter keyword and other shared client state.
-- **TanStack Query** is used for server state, caching, refetching, and mutation invalidation.
-
-This separation keeps the code easier to maintain and test.
-
-## Testing Strategy
-
-The project includes unit tests for important parts of the architecture:
-- mappers,
-- repository implementations,
-- use cases,
-- Redux slices,
-- ViewModels.
-
-Example test targets:
-- `contact.mapper.test.ts`
-- `get-contacts.use-case.test.ts`
-- `contact-filter.slice.test.ts`
-
-## Folder Structure
-
-```txt
+```
 src/
-├── app/
-│   ├── layout.tsx
-│   ├── page.tsx
-│   └── contacts/
-│       ├── page.tsx
-│       ├── create/page.tsx
-│       ├── [id]/page.tsx
-│       └── edit/[id]/page.tsx
-│
-├── providers/
-│   ├── AppProvider.tsx
-│   ├── ReduxProvider.tsx
-│   └── QueryProvider.tsx
-│
-├── store/
-│   ├── index.ts
-│   ├── hooks.ts
-│   └── types.ts
-│
-├── shared/
-│   ├── api/
-│   ├── components/
-│   ├── hooks/
-│   ├── utils/
-│   ├── theme/
-│   └── constants/
-│
-├── features/
-│   └── contact/
-│       ├── domain/
-│       ├── data/
-│       └── presentation/
-│
-└── tests/
+├── app/           # Next.js routes
+├── providers/     # App providers (Redux, QueryClient)
+├── store/         # Redux store + hooks
+├── shared/        # Shared UI, api client, utilities
+└── features/      # Feature modules (contact)
 ```
 
-## Screens
+## Testing
 
-- Contacts List
-- Contact Detail
-- Create Contact
-- Edit Contact
+Unit and component tests are implemented with Vitest and Testing Library. Run:
 
-## Deployment
-
-You can deploy this app to:
-- Vercel,
-- Netlify,
-- or any platform that supports Next.js.
+```bash
+npm run test
+npm run coverage
+```
 
 ## Notes
 
-This project was built with a focus on:
-- maintainability,
-- readability,
-- predictable data flow,
-- separation of concerns,
-- interview-ready code structure.
+- The app is structured for maintainability and testability using a feature-based clean architecture.
+- Redux handles local/UI state (search/filter), while TanStack Query handles server state and caching.
 
-## License
+---
 
-This project is for educational and assessment purposes.
+If you'd like, I can also add a GitHub Actions workflow and CI status badge, or update the badges to point to your repository. Want me to do that next?
+CI badge points to `pramahaditamaputra/contact-management-react-with-nextjs`.

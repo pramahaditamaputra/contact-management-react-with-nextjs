@@ -1,28 +1,24 @@
 # Contact CRUD App
 
-[![Release](https://img.shields.io/github/v/release/pramahaditamaputra/contact-management-react-with-nextjs)](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/releases/tag/v0.1.0)
-![Node](https://img.shields.io/badge/node-%3E%3D_18-brightgreen)
+![Node](https://img.shields.io/badge/Node.js-24%20LTS-339933?logo=nodedotjs&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-16.2.6-000000?logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
+![Redux Toolkit](https://img.shields.io/badge/Redux%20Toolkit-2.x-764ABC?logo=redux)
+![TanStack Query](https://img.shields.io/badge/TanStack%20Query-5.x-FF4154?logo=reactquery&logoColor=white)
+![React Hook Form](https://img.shields.io/badge/React%20Hook%20Form-7.x-EC5990?logo=reacthookform&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-3.x-3E67B1)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.x-06B6D4?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/tests-vitest-ff69b4)
+![Testing Library](https://img.shields.io/badge/Testing%20Library-14.x-E33332?logo=testinglibrary&logoColor=white)
+![Coverage](https://img.shields.io/badge/coverage-97.57%25-brightgreen)
 ![CI](https://github.com/pramahaditamaputra/contact-management-react-with-nextjs/actions/workflows/ci.yml/badge.svg)
 
-A modern Contact CRUD application built with Next.js, TypeScript, Redux Toolkit and TanStack Query following a feature-based clean architecture.
-
-Key points:
-- Next.js 16 + React 19
-- TypeScript 5
-- Redux Toolkit for UI state
-- TanStack Query for server state
-
-## Quick status
-
-- Project version: `0.1.0`
-- Private package (not published to npm)
+A modern Contact CRUD application built with Next.js + React 19, TypeScript, Redux Toolkit and TanStack Query following a feature-based clean architecture.
 
 ## Tech Stack
 
-- Framework: Next.js 16
+- Framework: Next.js 16 + React 19
 - Language: TypeScript 5
 - State Management: Redux Toolkit
 - Server State: TanStack Query
@@ -34,8 +30,8 @@ Key points:
 
 Prerequisites:
 
-- Node.js 18+
-- npm / yarn / pnpm
+- Node.js 24 LTS
+- npm
 
 Install dependencies:
 
@@ -43,7 +39,7 @@ Install dependencies:
 npm install
 ```
 
-Environment variables (create `.env.local`):
+Environment variables (create `.env`):
 
 ```bash
 NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com
@@ -106,5 +102,3 @@ npm run coverage
 
 - The app is structured for maintainability and testability using a feature-based clean architecture.
 - Redux handles local/UI state (search/filter), while TanStack Query handles server state and caching.
-
----

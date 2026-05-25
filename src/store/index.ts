@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import contactFilterReducer from "../features/contact/presentation/state/contact-filter.slice";
+import contactPaginationReducer from "../features/contact/presentation/state/contact-pagination.slice";
 
 export const store = configureStore({
   reducer: {
-    contactFilter: contactFilterReducer,
+    contactPagination: contactPaginationReducer,
   },
 });
 

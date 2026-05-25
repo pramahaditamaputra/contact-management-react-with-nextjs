@@ -1,30 +1,36 @@
-import React from "react";
 import { useContactsQuery } from "../queries/useContactsQuery";
 import { type PaginationState } from "@tanstack/react-table";
-import { createContactColumns } from "../components/data-table/columns-contact";
+import contactColumns from "../components/data-table/columns-contact";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import { setPagination } from "../state/contact-pagination.slice";
 
 const useContactViewModel = () => {
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 5,
-  });
+  const dispatch = useAppDispatch();
+  const pagination = useAppSelector((state) => state.contactPagination);
+  const columns = contactColumns();
   const contactsQuery = useContactsQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
   });
-  const loading = contactsQuery.isLoading || contactsQuery.isFetching;
 
-  const columns = createContactColumns();
+  const onPaginationChange: React.Dispatch<
+    React.SetStateAction<PaginationState>
+  > = (updater) => {
+    const nextPagination =
+      typeof updater === "function" ? updater(pagination) : updater;
+
+    dispatch(setPagination(nextPagination));
+  };
 
   return {
     pagination: {
       state: pagination,
       pageCount: undefined,
-      onPaginationChange: setPagination,
+      onPaginationChange,
     },
     contacts: {
       items: contactsQuery.data ?? [],
-      loading,
+      loading: contactsQuery.isLoading || contactsQuery.isFetching,
       error: contactsQuery.error,
       refetch: contactsQuery.refetch,
     },

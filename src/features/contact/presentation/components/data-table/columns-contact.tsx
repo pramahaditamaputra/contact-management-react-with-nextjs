@@ -3,7 +3,7 @@ import Image from "next/image";
 import { DataTableColumnHeader } from "@/src/shared/components/data-table/data-table-column-header";
 import { ContactUi } from "../../viewmodels/mappers/contact.mapper";
 
-export const createContactColumns = (): ColumnDef<ContactUi, unknown>[] => [
+const contactColumns = (): ColumnDef<ContactUi, unknown>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -48,3 +48,5 @@ export const createContactColumns = (): ColumnDef<ContactUi, unknown>[] => [
     enableHiding: true,
   },
 ];
+
+export default contactColumns;

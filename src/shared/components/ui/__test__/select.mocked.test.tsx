@@ -43,7 +43,7 @@ describe("Select (mocked radix) coverage", () => {
           <SelectScrollUpButton />
           <SelectScrollDownButton />
         </SelectContent>
-      </Select>
+      </Select>,
     );
 
     expect(screen.getByText("tr")).toBeDefined();

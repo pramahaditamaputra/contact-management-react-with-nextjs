@@ -59,7 +59,7 @@ describe("DropdownMenu (mocked radix) coverage", () => {
           <DropdownMenuSeparator />
           <DropdownMenuShortcut>sc</DropdownMenuShortcut>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu>,
     );
 
     expect(screen.getByText("it")).toBeDefined();

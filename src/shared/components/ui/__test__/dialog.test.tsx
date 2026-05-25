@@ -11,7 +11,7 @@ describe("Dialog interaction", () => {
         <DialogContent>
           <div>Dialog Body</div>
         </DialogContent>
-      </Dialog>
+      </Dialog>,
     );
 
     const trigger = screen.getByText("Open");

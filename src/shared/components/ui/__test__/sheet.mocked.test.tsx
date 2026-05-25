@@ -23,7 +23,7 @@ describe("Sheet (mocked radix) coverage", () => {
     render(
       <Sheet>
         <div>sheet inner</div>
-      </Sheet>
+      </Sheet>,
     );
 
     expect(screen.getByText("sheet inner")).toBeDefined();

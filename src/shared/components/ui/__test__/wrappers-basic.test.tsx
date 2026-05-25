@@ -29,10 +29,25 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../breadcrumb";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupTextarea } from "../input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupTextarea,
+} from "../input-group";
 import { Separator } from "../separator";
 import { Skeleton } from "../skeleton";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../table";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
 import { Textarea } from "../textarea";
 import { Toggle } from "../toggle";
@@ -64,7 +79,10 @@ describe("basic UI wrappers", () => {
 
     expect(screen.getByTestId("avatar")).toHaveAttribute("data-slot", "avatar");
     expect(screen.getByTestId("card")).toHaveAttribute("data-size", "sm");
-    expect(screen.getByText("Title")).toHaveAttribute("data-slot", "card-title");
+    expect(screen.getByText("Title")).toHaveAttribute(
+      "data-slot",
+      "card-title",
+    );
   });
 
   it("renders checkbox, separator, skeleton and textarea", () => {
@@ -146,12 +164,18 @@ describe("basic UI wrappers", () => {
     );
 
     expect(screen.getByText("Name")).toHaveAttribute("data-slot", "table-head");
-    expect(screen.getByText("One")).toHaveAttribute("data-slot", "tabs-trigger");
+    expect(screen.getByText("One")).toHaveAttribute(
+      "data-slot",
+      "tabs-trigger",
+    );
     expect(screen.getByRole("button", { name: "Bold" })).toHaveAttribute(
       "data-slot",
       "toggle",
     );
-    expect(screen.getByText("Home")).toHaveAttribute("data-slot", "breadcrumb-link");
+    expect(screen.getByText("Home")).toHaveAttribute(
+      "data-slot",
+      "breadcrumb-link",
+    );
   });
 
   it("renders input group controls and interactions", () => {

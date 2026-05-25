@@ -13,7 +13,7 @@ describe("DropdownMenu interaction", () => {
     render(
       <DropdownMenu>
         <DropdownMenuTrigger>Menu</DropdownMenuTrigger>
-      </DropdownMenu>
+      </DropdownMenu>,
     );
 
     const trigger = screen.getByText("Menu");

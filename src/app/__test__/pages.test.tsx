@@ -51,8 +51,8 @@ describe("app entrypoints", () => {
       RootLayout({ children: <div>Body</div> } as any),
     );
 
-    expect(markup).toContain("lang=\"en\"");
+    expect(markup).toContain('lang="en"');
     expect(markup).toContain("Body");
-    expect(markup).toContain("data-testid=\"layout\"");
+    expect(markup).toContain('data-testid="layout"');
   });
 });

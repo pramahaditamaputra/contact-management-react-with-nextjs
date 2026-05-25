@@ -67,8 +67,17 @@ describe("Sidebar", () => {
     );
 
     expect(screen.getByText("Header")).toBeInTheDocument();
-    expect(screen.getByText("Item")).toHaveAttribute("data-slot", "sidebar-menu-button");
-    expect(screen.getByText("Sub")).toHaveAttribute("data-slot", "sidebar-menu-sub-button");
-    expect(screen.getByText("Inner")).toHaveAttribute("data-slot", "sidebar-inset");
+    expect(screen.getByText("Item")).toHaveAttribute(
+      "data-slot",
+      "sidebar-menu-button",
+    );
+    expect(screen.getByText("Sub")).toHaveAttribute(
+      "data-slot",
+      "sidebar-menu-sub-button",
+    );
+    expect(screen.getByText("Inner")).toHaveAttribute(
+      "data-slot",
+      "sidebar-inset",
+    );
   });
 });

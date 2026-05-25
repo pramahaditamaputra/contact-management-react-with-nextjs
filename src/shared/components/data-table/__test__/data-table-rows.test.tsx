@@ -41,7 +41,13 @@ const mockTable = {
 
 describe("DataTable content with rows", () => {
   it("renders when rows exist", () => {
-    render(<DataTableContent table={mockTable as any} columnsLength={1} loading={false} />);
+    render(
+      <DataTableContent
+        table={mockTable as any}
+        columnsLength={1}
+        loading={false}
+      />,
+    );
     expect(true).toBeTruthy();
   });
 });

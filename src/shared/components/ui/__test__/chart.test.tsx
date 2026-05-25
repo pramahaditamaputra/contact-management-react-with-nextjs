@@ -16,7 +16,7 @@ describe("chart utilities", () => {
     render(
       <ChartContainer config={config}>
         <ChartTooltipContent active={false} payload={[]} />
-      </ChartContainer>
+      </ChartContainer>,
     );
     // nothing rendered
     expect(document.body.textContent).not.toContain("A");
@@ -33,9 +33,16 @@ describe("chart utilities", () => {
 
     render(
       <ChartContainer config={config}>
-        <ChartTooltipContent active payload={[{ name: "v", value: 1, dataKey: "v" } as any]} />
-        <ChartLegendContent payload={[{ name: "v", value: 1, dataKey: "v", color: "#000" } as any]} />
-      </ChartContainer>
+        <ChartTooltipContent
+          active
+          payload={[{ name: "v", value: 1, dataKey: "v" } as any]}
+        />
+        <ChartLegendContent
+          payload={[
+            { name: "v", value: 1, dataKey: "v", color: "#000" } as any,
+          ]}
+        />
+      </ChartContainer>,
     );
 
     expect(document.body.textContent).toContain("V");

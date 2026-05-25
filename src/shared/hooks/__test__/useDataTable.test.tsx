@@ -24,9 +24,7 @@ const data: Row[] = [
 
 describe("useDataTable", () => {
   it("uses internal pagination state by default", () => {
-    const { result } = renderHook(() =>
-      useDataTable<Row>({ data, columns }),
-    );
+    const { result } = renderHook(() => useDataTable<Row>({ data, columns }));
 
     expect(result.current.table.getState().pagination).toEqual({
       pageIndex: 0,

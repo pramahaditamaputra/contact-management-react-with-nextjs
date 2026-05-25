@@ -11,7 +11,7 @@ describe("Sheet interaction", () => {
         <SheetContent>
           <div>Sheet Body</div>
         </SheetContent>
-      </Sheet>
+      </Sheet>,
     );
 
     const trigger = screen.getByText("Open");

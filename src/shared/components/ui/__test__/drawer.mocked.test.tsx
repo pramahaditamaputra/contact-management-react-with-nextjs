@@ -37,7 +37,7 @@ describe("Drawer (mocked vaul) coverage", () => {
           </DrawerHeader>
           <DrawerFooter>f</DrawerFooter>
         </DrawerContent>
-      </Drawer>
+      </Drawer>,
     );
 
     expect(screen.getByText("t")).toBeDefined();

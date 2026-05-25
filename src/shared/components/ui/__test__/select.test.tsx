@@ -1,12 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "../select";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "../select";
 
 describe("Select interaction", () => {
   it("shows select items when opened", () => {
@@ -16,7 +11,7 @@ describe("Select interaction", () => {
         <SelectContent>
           <SelectItem>Option</SelectItem>
         </SelectContent>
-      </Select>
+      </Select>,
     );
 
     const trigger = screen.getByText("Sel");

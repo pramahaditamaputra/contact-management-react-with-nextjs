@@ -41,7 +41,7 @@ describe("Dialog (mocked radix) coverage", () => {
             <DialogDescription>D2</DialogDescription>
           </DialogContent>
         </>
-      </Dialog>
+      </Dialog>,
     );
 
     expect(screen.getByText("Open")).toBeDefined();

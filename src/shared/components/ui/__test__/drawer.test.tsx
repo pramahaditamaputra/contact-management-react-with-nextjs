@@ -11,7 +11,7 @@ describe("Drawer interaction", () => {
         <DrawerContent>
           <div>Drawer Body</div>
         </DrawerContent>
-      </Drawer>
+      </Drawer>,
     );
 
     const trigger = screen.getByText("Open");

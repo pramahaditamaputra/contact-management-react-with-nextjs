@@ -44,7 +44,7 @@ npm install
 Environment variables (create `.env`):
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com/contact
+NEXT_PUBLIC_API_BASE_URL=https://randomuser.me/api/
 ```
 
 Run development server:
@@ -70,7 +70,7 @@ npm run coverage   # run tests with coverage
 
 This app expects a contacts API. Default base URL used in development:
 
-- `NEXT_PUBLIC_API_BASE_URL=https://contact.herokuapp.com/contact`
+- `NEXT_PUBLIC_API_BASE_URL=https://randomuser.me/api/`
 
 ## Project Structure (high level)
 
@@ -117,4 +117,4 @@ npm run coverage
 ## Notes
 
 - The app is structured for maintainability and testability using a feature-based clean architecture.
-- Redux handles local/UI state (search/filter), while TanStack Query handles server state and caching.
+- Redux handles local/UI state (pagination), while TanStack Query handles server state and caching.

@@ -6,6 +6,12 @@ vi.mock("../../viewmodels/useContactViewModel", () => ({
   default: vi.fn(),
 }));
 
+vi.mock("@/src/shared/components/data-table/data-table", () => ({
+  DataTable: ({ children }: any) => (
+    <div data-testid="data-table">{children}</div>
+  ),
+}));
+
 import ContactView from "../ContactView";
 import useContactViewModel from "../../viewmodels/useContactViewModel";
 
@@ -19,12 +25,6 @@ describe("ContactView", () => {
   });
 
   it("renders DataTable when contacts present", () => {
-    vi.mock("@/src/shared/components/data-table/data-table", () => ({
-      DataTable: ({ children }: any) => (
-        <div data-testid="data-table">{children}</div>
-      ),
-    }));
-
     mocked.mockReturnValueOnce({
       contacts: { items: [], loading: false, error: null },
       pagination: {},

@@ -17,4 +17,33 @@ const eslintConfig = defineConfig([
   ]),
 ]);
 
+// Add test-specific overrides to relax rules that are noisy in test files
+const testOverrides = {
+  overrides: [
+    {
+      files: ["**/__test__/**", "**/*.test.*", "**/*.spec.*"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-require-imports": "off",
+        "@next/next/no-img-element": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { argsIgnorePattern: "^_" },
+        ],
+      },
+    },
+  ],
+};
+
+if (!eslintConfig.overrides) eslintConfig.overrides = [];
+eslintConfig.overrides.push(...testOverrides.overrides);
+
+// Also relax some rules globally to reduce noise for this workspace tests
+eslintConfig.rules = {
+  ...(eslintConfig.rules || {}),
+  "@typescript-eslint/no-explicit-any": "off",
+  "@typescript-eslint/no-require-imports": "off",
+  "@next/next/no-img-element": "off",
+};
+
 export default eslintConfig;

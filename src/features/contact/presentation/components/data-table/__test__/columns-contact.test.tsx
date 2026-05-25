@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+/* eslint-disable @typescript-eslint/no-explicit-any, @next/next/no-img-element */
 import { render, screen } from "@testing-library/react";
 
 vi.mock("next/image", () => ({

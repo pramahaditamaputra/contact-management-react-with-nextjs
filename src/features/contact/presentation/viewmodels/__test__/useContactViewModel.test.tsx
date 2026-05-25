@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -32,7 +33,7 @@ const TestComponent = () => {
 
   React.useEffect(() => {
     vm.pagination.onPaginationChange({ pageIndex: 1, pageSize: 5 } as any);
-  }, []);
+  }, [vm.pagination]);
 
   return null;
 };

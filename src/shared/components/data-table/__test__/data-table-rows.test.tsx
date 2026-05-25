@@ -41,6 +41,7 @@ const mockTable = {
 
 describe("DataTable content with rows", () => {
   it("renders when rows exist", () => {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     render(
       <DataTableContent
         table={mockTable as any}

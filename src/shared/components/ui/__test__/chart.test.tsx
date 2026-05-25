@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { render } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 
 import {

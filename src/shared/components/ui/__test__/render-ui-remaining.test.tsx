@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from "vitest";
 
 // Mocks
@@ -31,10 +32,7 @@ vi.mock("vaul", () => {
 });
 
 vi.mock("sonner", () => ({
-  Toaster: (p: any) => {
-    const { toastOptions, ...rest } = p || {};
-    return <div {...rest} />;
-  },
+  Toaster: (p: any) => <div {...p} />,
 }));
 
 vi.mock("next-themes", () => ({ useTheme: () => ({ theme: "light" }) }));

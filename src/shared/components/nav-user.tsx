@@ -7,27 +7,14 @@ import {
 } from "@/src/shared/components/ui/avatar";
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/shared/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/src/shared/components/ui/sidebar";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  MoreVerticalCircle01Icon,
-  UserCircle02Icon,
-  CreditCardIcon,
-  Notification03Icon,
-  Logout01Icon,
-} from "@hugeicons/core-free-icons";
+// icon imports removed (commented-out UI code used them)
 
 export function NavUser({
   user,
@@ -38,8 +25,6 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const { isMobile } = useSidebar();
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>

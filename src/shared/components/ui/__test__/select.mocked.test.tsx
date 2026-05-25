@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports */
 vi.mock("radix-ui", () => {
   const React = require("react");
   const Base = (props: any) => React.createElement("div", props);

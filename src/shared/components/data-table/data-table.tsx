@@ -27,15 +27,13 @@ export function DataTable<TData extends RowData>({
   const { table } = useDataTable<TData>({ data, columns, pagination });
 
   return (
-    <div className="w-full flex-col justify-start gap-6">
-      <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-        <DataTableContent
-          table={table}
-          columnsLength={columns.length}
-          loading={loading}
-        />
-        <DataTablePagination table={table} />
-      </div>
+    <div className="flex flex-col gap-4">
+      <DataTableContent
+        table={table}
+        columnsLength={columns.length}
+        loading={loading}
+      />
+      <DataTablePagination table={table} />
     </div>
   );
 }

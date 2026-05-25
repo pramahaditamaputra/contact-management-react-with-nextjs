@@ -14,7 +14,7 @@ export const contactApi = {
   }) {
     const params = {
       results: pageSize,
-      page: pageIndex,
+      page: pageIndex + 1,
       seed,
     };
 

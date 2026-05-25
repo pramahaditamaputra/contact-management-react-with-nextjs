@@ -13,17 +13,13 @@ const useContactViewModel = () => {
     pageSize: pagination.pageSize,
   });
   const loading = contactsQuery.isLoading || contactsQuery.isFetching;
-  const pageCount = Math.max(
-    1,
-    Math.ceil((contactsQuery.data?.length || 0) / pagination.pageSize),
-  );
 
   const columns = createContactColumns();
 
   return {
     pagination: {
       state: pagination,
-      pageCount,
+      pageCount: undefined,
       onPaginationChange: setPagination,
     },
     contacts: {

@@ -20,7 +20,7 @@ type UseDataTableProps<TData extends RowData> = {
   columns: ColumnDef<TData, unknown>[];
   pagination?: {
     state: PaginationState;
-    pageCount: number;
+    pageCount?: number;
     onPaginationChange: React.Dispatch<React.SetStateAction<PaginationState>>;
   };
 };

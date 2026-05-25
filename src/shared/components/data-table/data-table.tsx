@@ -13,7 +13,7 @@ export type DataTableProps<TData extends RowData> = {
   loading?: boolean;
   pagination?: {
     state: PaginationState;
-    pageCount: number;
+    pageCount?: number;
     onPaginationChange: React.Dispatch<React.SetStateAction<PaginationState>>;
   };
 };

@@ -103,7 +103,7 @@ describe("useContactListViewModel", () => {
       { id: "1", name: "Budi", phone: "0812" },
     ]);
     expect(result.current.contacts.totalCount).toBe(1);
-    expect(result.current.pagination.pageCount).toBe(1);
+    expect(result.current.pagination.pageCount).toBeUndefined();
   });
 
   it("falls back to empty contacts when data is missing", () => {

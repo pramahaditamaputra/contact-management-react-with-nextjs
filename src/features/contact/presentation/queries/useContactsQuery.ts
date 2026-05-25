@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ContactRepositoryImpl } from "../../data/repositories/contact.repository.impl";
 import { GetContactsUseCase } from "../../domain/usecases/get-contacts.usecase";
 import { contactQueryKeys } from "./contact.querykeys";
@@ -21,9 +21,10 @@ export const useContactsQuery = ({
     queryFn: () =>
       useCase.execute({
         seed,
-        page: pageIndex,
+        page: pageIndex + 1,
         results: pageSize,
       }),
+    placeholderData: keepPreviousData,
     select: (contacts) => contactsEntityToUi(contacts),
   });
 };

@@ -1,49 +1,49 @@
 import { describe, it, expect, vi } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
-import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useContactsQuery } from "../useContactsQuery";
+import { useQuery } from "@tanstack/react-query";
+import { contactQueryKeys } from "../contact.querykeys";
 
-vi.mock("../../data/repositories/contact.repository.impl", () => ({
-  ContactRepositoryImpl: vi.fn().mockImplementation(function () {
-    return {
-      getContacts: vi.fn().mockResolvedValue({
-        items: [{ id: "1", name: "Budi", phone: "0812" }],
-        total: 1,
-        skip: 0,
-        limit: 1,
-      }),
-    };
-  }),
+vi.mock("@tanstack/react-query", () => ({ useQuery: vi.fn() }));
+vi.mock("../../../domain/usecases/get-contacts.usecase", () => ({
+  GetContactsUseCase: class {
+    execute() {
+      return Promise.resolve([]);
+    }
+  },
 }));
 
-import { useContactsQuery } from "../useContactsQuery";
-
-const wrapper = ({ children }: { children: React.ReactNode }) => {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
-  return React.createElement(QueryClientProvider, { client }, children);
-};
-
 describe("useContactsQuery", () => {
-  it("returns contacts", async () => {
-    const { result } = renderHook(() => useContactsQuery("budi"), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
+  it("calls useQuery with correct queryKey and queryFn/select work", async () => {
+    (useQuery as any).mockReturnValue({
+      data: [],
+      isLoading: false,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
     });
 
-    expect(result.current.data).toEqual({
-      items: [
-        expect.objectContaining({
-          id: "1",
-          name: "Budi",
-          phone: "0812",
-        }),
-      ],
-      total: 1,
-      skip: 0,
-      limit: 1,
-    });
+    useContactsQuery({ seed: "s", pageIndex: 0, pageSize: 5 });
+
+    expect(useQuery).toHaveBeenCalled();
+    const calledWith = (useQuery as any).mock.calls[0][0];
+    expect(calledWith.queryKey).toEqual(contactQueryKeys.list("s", 0, 5));
+
+    // call queryFn and select to ensure paths are executable
+    const data = await calledWith.queryFn();
+    expect(Array.isArray(data)).toBe(true);
+    expect(calledWith.select).toBeInstanceOf(Function);
+    const ui = calledWith.select([
+      {
+        id: "1",
+        name: "A",
+        phone: "p",
+        cell: "c",
+        location: "l",
+        email: "e",
+        dob: new Date().toISOString(),
+        picture: "",
+      },
+    ]);
+    expect(Array.isArray(ui)).toBe(true);
   });
 });

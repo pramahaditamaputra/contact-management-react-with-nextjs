@@ -1,26 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import { contactQueryKeys } from "../contact.querykeys";
 
 describe("contactQueryKeys", () => {
-  it("builds stable list and detail keys", () => {
+  it("builds list and detail keys", () => {
     expect(contactQueryKeys.all).toEqual(["contacts"]);
     expect(contactQueryKeys.lists()).toEqual(["contacts", "list"]);
-    expect(contactQueryKeys.list()).toEqual([
+    expect(contactQueryKeys.list("s", 1, 2)).toEqual([
       "contacts",
       "list",
-      { keyword: undefined, pageIndex: undefined, pageSize: undefined },
+      { seed: "s", pageIndex: 1, pageSize: 2 },
     ]);
-    expect(contactQueryKeys.list("budi")).toEqual([
-      "contacts",
-      "list",
-      { keyword: "budi", pageIndex: undefined, pageSize: undefined },
-    ]);
-    expect(contactQueryKeys.list("budi", 1, 5)).toEqual([
-      "contacts",
-      "list",
-      { keyword: "budi", pageIndex: 1, pageSize: 5 },
-    ]);
-    expect(contactQueryKeys.details()).toEqual(["contacts", "detail"]);
-    expect(contactQueryKeys.detail("1")).toEqual(["contacts", "detail", "1"]);
   });
 });

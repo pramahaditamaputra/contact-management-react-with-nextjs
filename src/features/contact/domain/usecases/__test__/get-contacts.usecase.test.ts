@@ -2,18 +2,16 @@ import { describe, it, expect, vi } from "vitest";
 import { GetContactsUseCase } from "../get-contacts.usecase";
 
 describe("GetContactsUseCase", () => {
-  it("calls repository with keyword", async () => {
-    const repository = {
-      getContact: vi.fn(),
-      getContacts: vi.fn().mockResolvedValue([]),
-      createContact: vi.fn(),
-      updateContact: vi.fn(),
-      deleteContact: vi.fn(),
-    };
+  it("calls repository.getContacts with mapped params", async () => {
+    const repo = { getContacts: vi.fn().mockResolvedValue([]) };
+    const useCase = new GetContactsUseCase(repo as any);
 
-    const useCase = new GetContactsUseCase(repository);
-    await useCase.execute("budi");
+    await useCase.execute({ seed: "s", page: 1, results: 5 });
 
-    expect(repository.getContacts).toHaveBeenCalledWith("budi", 0, 5);
+    expect(repo.getContacts).toHaveBeenCalledWith({
+      seed: "s",
+      pageSize: 5,
+      pageIndex: 1,
+    });
   });
 });

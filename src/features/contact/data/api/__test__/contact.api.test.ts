@@ -1,105 +1,31 @@
-import { describe, expect, it, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { contactApi } from "../contact.api";
 import { apiClient } from "@/src/shared/api/axios";
+import { endpoints } from "@/src/shared/api/endpoints";
 
 vi.mock("@/src/shared/api/axios", () => ({
   apiClient: {
     get: vi.fn(),
-    post: vi.fn(),
-    patch: vi.fn(),
-    put: vi.fn(),
-    delete: vi.fn(),
   },
 }));
 
 describe("contactApi", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  it("calls apiClient.get with correct params", async () => {
+    const dto = {
+      results: [],
+      info: { seed: "s", results: 0, page: 0, version: "v" },
+    };
+    vi.mocked(apiClient.get).mockResolvedValueOnce({ data: dto });
 
-  it("fetches contacts with search params", async () => {
-    vi.mocked(apiClient.get).mockResolvedValueOnce({
-      data: {
-        users: [{ id: "1", name: "Budi", phone: "0812" }],
-        total: 1,
-        skip: 0,
-        limit: 10,
-      },
-    } as never);
-
-    await contactApi.getContacts("budi");
-
-    expect(apiClient.get).toHaveBeenCalledWith("/users/search", {
-      params: { q: "budi", limit: 5, skip: 0 },
-    });
-  });
-
-  it("fetches contacts without search params", async () => {
-    vi.mocked(apiClient.get).mockResolvedValueOnce({
-      data: {
-        users: [{ id: "1", name: "Budi", phone: "0812" }],
-        total: 1,
-        skip: 0,
-        limit: 10,
-      },
-    } as never);
-
-    await contactApi.getContacts();
-
-    expect(apiClient.get).toHaveBeenCalledWith("/users", {
-      params: { limit: 5, skip: 0 },
-    });
-  });
-
-  it("fetches a contact by id", async () => {
-    vi.mocked(apiClient.get).mockResolvedValueOnce({
-      data: { id: "1", name: "Budi", phone: "0812" },
-    } as never);
-
-    await contactApi.getContact("1");
-
-    expect(apiClient.get).toHaveBeenCalledWith("/users/1");
-  });
-
-  it("creates a contact", async () => {
-    vi.mocked(apiClient.post).mockResolvedValueOnce({
-      data: { id: "1", name: "Budi", phone: "0812" },
-    } as never);
-
-    await contactApi.createContact({
-      name: "Budi Santoso",
-      phone: "0812",
-      email: "[email protected]",
+    const res = await contactApi.getContacts({
+      seed: "s",
+      pageSize: 2,
+      pageIndex: 1,
     });
 
-    expect(apiClient.post).toHaveBeenCalledWith("/users/add", {
-      firstName: "Budi",
-      lastName: "Santoso",
-      phone: "0812",
-      email: "[email protected]",
-      image: undefined,
-      notes: undefined,
+    expect(apiClient.get).toHaveBeenCalledWith(endpoints.contacts, {
+      params: { results: 2, page: 1, seed: "s" },
     });
-  });
-
-  it("updates a contact", async () => {
-    vi.mocked(apiClient.patch).mockResolvedValueOnce({
-      data: { id: "1", firstName: "Budi", lastName: "Updated", phone: "0812" },
-    } as never);
-
-    await contactApi.updateContact("1", { name: "Budi Updated" });
-
-    expect(apiClient.patch).toHaveBeenCalledWith("/users/1", {
-      firstName: "Budi",
-      lastName: "Updated",
-    });
-  });
-
-  it("deletes a contact", async () => {
-    vi.mocked(apiClient.delete).mockResolvedValueOnce(undefined as never);
-
-    await contactApi.deleteContact("1");
-
-    expect(apiClient.delete).toHaveBeenCalledWith("/users/1");
+    expect(res).toBe(dto);
   });
 });

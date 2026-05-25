@@ -1,5 +1,5 @@
-import { ContactListView } from "@/src/features/contact/presentation/views/ContactListView";
+import ContactView from "@/src/features/contact/presentation/views/ContactView";
 
 export default function ContactsPage() {
-  return <ContactListView />;
+  return <ContactView />;
 }

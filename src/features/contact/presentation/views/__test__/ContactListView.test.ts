@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { ContactListView } from "../ContactListView";
-import { useContactListViewModel } from "../../viewmodels/useContactListViewModel";
+import { ContactListView } from "../ContactView";
+import { useContactListViewModel } from "../../viewmodels/useContactViewModel";
 
 vi.mock("../../components/ContactCreateDialog", () => ({
   ContactCreateDialog: () =>

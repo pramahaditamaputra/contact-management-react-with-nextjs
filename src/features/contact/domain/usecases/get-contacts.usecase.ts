@@ -3,7 +3,19 @@ import { ContactRepository } from "../repositories/contact.repository";
 export class GetContactsUseCase {
   constructor(private readonly repository: ContactRepository) {}
 
-  execute(keyword?: string, pageIndex = 0, pageSize = 5) {
-    return this.repository.getContacts(keyword, pageIndex, pageSize);
+  execute({
+    seed,
+    page,
+    results,
+  }: {
+    seed?: string;
+    page: number;
+    results: number;
+  }) {
+    return this.repository.getContacts({
+      seed,
+      pageSize: results,
+      pageIndex: page,
+    });
   }
 }

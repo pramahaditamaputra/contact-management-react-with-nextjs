@@ -53,7 +53,7 @@ vi.mock("../../queries/useDeleteContactMutation", () => ({
 }));
 
 import { useContactsQuery } from "../../queries/useContactsQuery";
-import { useContactListViewModel } from "../useContactListViewModel";
+import { useContactListViewModel } from "../useContactViewModel";
 import { useCreateContactMutation } from "../../queries/useCreateContactMutation";
 import { useUpdateContactMutation } from "../../queries/useUpdateContactMutation";
 import { useDeleteContactMutation } from "../../queries/useDeleteContactMutation";

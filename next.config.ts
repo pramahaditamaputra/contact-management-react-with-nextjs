@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    remotePatterns: [new URL("https://dummyjson.com/**")],
+    remotePatterns: [new URL("https://randomuser.me/**")],
   },
 };
 

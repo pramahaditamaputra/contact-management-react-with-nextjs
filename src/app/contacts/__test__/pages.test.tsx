@@ -5,7 +5,7 @@ import ContactsPage from "../page";
 import ContactCreatePage from "../create/page";
 import ContactDetailPage from "../[id]/page";
 import ContactEditPage from "../edit/[id]/page";
-import { ContactListView } from "@/src/features/contact/presentation/views/ContactListView";
+import { ContactListView } from "@/src/features/contact/presentation/views/ContactView";
 import { ContactCreateView } from "@/src/features/contact/presentation/views/ContactCreateView";
 import { ContactDetailView } from "@/src/features/contact/presentation/views/ContactDetailView";
 import { ContactEditView } from "@/src/features/contact/presentation/views/ContactEditView";

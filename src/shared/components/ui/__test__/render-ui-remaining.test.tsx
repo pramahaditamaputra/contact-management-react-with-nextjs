@@ -100,7 +100,7 @@ describe("render remaining UI modules", () => {
           <Select>
             <SelectTrigger>Sel</SelectTrigger>
             <SelectContent>
-              <SelectItem>Item</SelectItem>
+              <SelectItem value="item">Item</SelectItem>
             </SelectContent>
           </Select>
 

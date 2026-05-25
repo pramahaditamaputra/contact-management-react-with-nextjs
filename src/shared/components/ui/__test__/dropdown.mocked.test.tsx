@@ -24,7 +24,7 @@ vi.mock("radix-ui", () => {
 });
 
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -50,7 +50,7 @@ describe("DropdownMenu (mocked radix) coverage", () => {
           <DropdownMenuItem>it</DropdownMenuItem>
           <DropdownMenuCheckboxItem checked>cb</DropdownMenuCheckboxItem>
           <DropdownMenuRadioGroup>
-            <DropdownMenuRadioItem>r</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="r">r</DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>sub</DropdownMenuSubTrigger>
